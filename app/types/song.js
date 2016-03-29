@@ -76,6 +76,12 @@ Song.prototype.setElapsed = function (pct) {
   this.elapsed = pct
 }
 
+Song.prototype.clone = function () {
+  var song = new Song(this.toJSON())
+  song.setElapsed(this.elapsed)
+  return song
+}
+
 Song.prototype.toJSON = function () {
   return this.o
 }

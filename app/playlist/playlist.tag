@@ -61,6 +61,7 @@
       color: #fff;
       font-family: 'LatoWebLight';
       font-size: 1em;
+      border: 0
     }
     
     playlist .trackadd input:disabled {

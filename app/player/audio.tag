@@ -58,6 +58,10 @@
         return true
       }
     }
+
+    this.store.on('restartSong', function () {
+      audioTag.currentTime = 0
+    })
     
     this.on('update', function () {
       var nitted = this.init()

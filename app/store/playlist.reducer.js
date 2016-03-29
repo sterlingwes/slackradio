@@ -21,6 +21,9 @@ function pickSong (newState, nextIndex) {
 
 function reducerFn (state = initialState, action) {
   var newState = Object.assign({}, state)
+  if (state.playing) {
+    newState.playing = state.playing.clone()
+  }
 
   switch (action.type) {
     case 'choose song':
