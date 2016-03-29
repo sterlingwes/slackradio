@@ -34,6 +34,7 @@
       font-family: 'LatoWebLight';
       font-size: 0.9em;
       box-shadow: inset 2px 2px 10px #111;
+      -webkit-user-select: none;
     }
     
     playlist, playlist .tracklist {

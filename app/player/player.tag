@@ -17,7 +17,8 @@
   
   <style>
     .trackdetails {
-      margin: 20px 10px 10px 10px;
+      margin: 25px 20px;
+      margin-bottom: 10px;
       text-align: center
     }
     

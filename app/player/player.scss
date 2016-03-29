@@ -17,6 +17,7 @@ player {
   flex: 0 0 300px;
   background: #222;
   overflow: hidden;
+  -webkit-app-region: drag;
 }
 
 @keyframes album-spin {
