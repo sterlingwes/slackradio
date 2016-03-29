@@ -11,7 +11,7 @@ window.SlackRadio = global.SlackRadio = {
   prev: function () {
     var state = reduxStore.getState()
     var song = state.songs.playing
-    if (song && song.elapsed < 3) {
+    if (song && song.elapsed > 3) {
       return reduxStore.trigger('restartSong')
     }
     reduxStore.trigger('prevSong')
