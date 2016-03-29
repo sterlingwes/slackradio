@@ -1,11 +1,14 @@
 const Song = require('../types/song')
 const storage = require('./storage')
-const actions = require('./actions')
+const mapActions = require('../utils/mapActions')
+const actions = require('./playlist.actions')
 const shuffle = require('knuth-shuffle').knuthShuffle
 const find = require('lodash.find')
 
+const playlistKey = 'playlist'
+
 var initialState = {
-  playlist: storage.read().map(song => new Song(song)),
+  playlist: storage.read(playlistKey).map(song => new Song(song)),
   isPlaying: false,
   activeIndex: 0,
   processingSong: false
@@ -59,7 +62,7 @@ function reducerFn (state = initialState, action) {
       list.push(action.song)
       newState.playlist = list
       newState.processingSong = false
-      storage.write(list) // probably shouldn't do this here...
+      storage.write(playlistKey, list) // probably shouldn't do this here...
       break
 
     case 'play':
@@ -80,7 +83,7 @@ function reducerFn (state = initialState, action) {
         newState.activeIndex = i
         return song.id === newState.playing.id
       })
-      storage.write(newState.playlist)
+      storage.write(playlistKey, newState.playlist)
       break
 
     case 'delete active':
@@ -95,11 +98,7 @@ function reducerFn (state = initialState, action) {
       if (!newState.playlist.length) {
         newState.playing = null
       }
-      storage.write(newState.playlist)
-      break
-
-    default:
-      if (!/@@redux\//.test(action.type)) console.warn('%cUnhandled action -> ' + action.type, 'color: red')
+      storage.write(playlistKey, newState.playlist)
       break
   }
 
@@ -107,19 +106,7 @@ function reducerFn (state = initialState, action) {
 }
 
 function init (store) {
-  window.SlackRadio.registerStore(store)
-
-  Object.keys(actions).forEach(action => {
-    var actionFn = actions[action]    
-    store.on(action, function () {
-      var actionVal = actionFn
-      if (typeof actionFn === 'function') {
-        actionVal = actionFn.apply(null, arguments)
-      }
-
-      store.dispatch(actionVal)
-    })
-  })
+  mapActions(actions, store)
 
   window.SlackRadio.ipc.on('acquiredSong', function (e, song) {
     store.dispatch({ type: 'add song', song: new Song(song) })

@@ -4,10 +4,12 @@
   <script>
     var audioTag
     var currentSrc
+    var lastTrackedId
     
     this.mixin('redux')
     this.use({
-      isPlaying: 'songs.isPlaying'
+      isPlaying: 'songs.isPlaying',
+      song: 'songs.playing'
     })
 
     this.play = function () {
@@ -23,6 +25,11 @@
       var tracks = audioTag.played
       var pct = audioTag.currentTime / audioTag.duration
       var elapsedPct = Math.ceil(pct * 100)
+      var song = this.state.song
+      if (elapsedPct > 75 && song && song.id !== lastTrackedId) {
+        lastTrackedId = this.state.song.id
+        this.store.trigger('trackPlay', lastTrackedId)
+      }
       this.store.trigger('elapsed', elapsedPct)
     }
     

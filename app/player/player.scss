@@ -6,7 +6,8 @@ body {
   background: #222;
   color: #fff;
   font-family: 'LatoWeb', sans-serif;
-  overflow: hidden
+  overflow: hidden;
+  -webkit-user-select: none;
 }
 
 player {

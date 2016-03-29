@@ -1,8 +1,10 @@
 import riot from 'riot'
-import Reducer from './store/playlist.reducer'
 import ReduxMixin from './store/riotRedux.mixin'
 import { combineReducers, createStore, applyMiddleware } from 'redux'
 import createLogger from './utils/logger'
+
+import playlistReducer from './store/playlist.reducer'
+import statsReducer from './store/stats.reducer'
 
 import './fonts/fonts.scss'
 import './playlist/loader.scss'
@@ -14,7 +16,8 @@ import './player/track-circle.tag'
 import './player/pie.tag'
 
 var RootReducer = combineReducers({
-  songs: Reducer.fn
+  songs: playlistReducer.fn,
+  stats: statsReducer.fn
 })
 
 var logger = createLogger({
@@ -29,7 +32,9 @@ var Store = ReduxMixin(
   )
 )
 
-Reducer.init(Store)
+window.SlackRadio.registerStore(Store)
+playlistReducer.init(Store)
+statsReducer.init(Store)
 
 riot.mount('player')
 riot.mount('playlist')

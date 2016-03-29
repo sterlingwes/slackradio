@@ -6,6 +6,7 @@
       onclick={ pickSong }
       >
         <div class="thumb" style={ getBgImage(song.getThumb()) }></div>
+        <div class="trackCount" style={ getTrackCountStyle(song.id) }></div>
         <div class="title">{ song.getArtist() } - { song.getTitle() }</div>
         <div class="time">{ song.getTime() }</div>
     </div>
@@ -34,7 +35,6 @@
       font-family: 'LatoWebLight';
       font-size: 0.9em;
       box-shadow: inset 2px 2px 10px #111;
-      -webkit-user-select: none;
     }
     
     playlist, playlist .tracklist {
@@ -94,6 +94,14 @@
       overflow: hidden;
     }
     
+    playlist .track .trackCount {
+      position: absolute;
+      top: 0;
+      left: 40px;
+      bottom: 0%;
+      background: #1D1D1D
+    }
+    
     playlist .track {
       position: relative;
       border-bottom: 1px solid #222;
@@ -130,7 +138,9 @@
     this.use({
       songs: 'songs.playlist',
       activeIndex: 'songs.activeIndex',
-      processingSong: 'songs.processingSong'
+      processingSong: 'songs.processingSong',
+      playCounts: 'stats.songCounts',
+      playCount: 'stats.totalCount'
     })
     
     this.getBgImage = function (img) {
@@ -139,6 +149,14 @@
         'background-size: cover',
         'background-position: center'
       ].join(';')
+    }
+
+    this.getTrackCountStyle = function (id) {
+      var plays = this.state.playCounts[id] || 0
+      if (!plays) return 'right: 100%'
+      var pct = plays / this.state.playCount
+      var right = 100 - Math.ceil(pct * 100)
+      return 'right:' + right + '%'
     }
     
     this.pickSong = function (e) {
