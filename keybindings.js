@@ -6,6 +6,7 @@ module.exports = {
   'CommandOrControl+Shift+Left': 'restart',
   'CommandOrControl+Backspace': 'delete',
   'CommandOrControl+S': 'shuffle',
+  'CommandOrControl+P': 'sortByPlays',
   'CommandOrControl+L': 'focusAdd',
   'Space': 'play'
 }

@@ -10,7 +10,7 @@ window.SlackRadio = global.SlackRadio = {
 
   prev: function () {
     var state = reduxStore.getState()
-    var song = state.songs.playing
+    var song = state.userSongs.playing
     if (song && song.elapsed > 3) {
       return reduxStore.trigger('restartSong')
     }
@@ -27,6 +27,16 @@ window.SlackRadio = global.SlackRadio = {
 
   shuffle: function () {
     reduxStore.trigger('shuffle')
+  },
+
+  sortByPlays: function () {
+    var state = reduxStore.getState()
+    var playCounts = state.stats.songCounts
+    var songIds = Object.keys(playCounts)
+    songIds.sort(function (a, b) {
+      return (playCounts[a] || 0) - (playCounts[b] || 0)
+    })
+    reduxStore.trigger('playSort', songIds)
   },
 
   delete: function () {

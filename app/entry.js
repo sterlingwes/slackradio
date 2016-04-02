@@ -16,7 +16,7 @@ import './player/track-circle.tag.html'
 import './player/pie.tag.html'
 
 var RootReducer = combineReducers({
-  songs: playlistReducer.fn,
+  userSongs: playlistReducer.fn,
   stats: statsReducer.fn,
   window: windowReducer.fn
 })

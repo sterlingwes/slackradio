@@ -75,8 +75,8 @@ function AudioElement (store) {
       audioTag.addEventListener('error', this.onError.bind(this))
 
       mapStateSubset.call(this, {
-        isPlaying: 'songs.isPlaying',
-        song: 'songs.playing',
+        isPlaying: 'userSongs.o.isPlaying',
+        song: 'userSongs.playing',
         focused: 'window.focused'
       })
     }

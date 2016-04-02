@@ -35,9 +35,9 @@
 
     this.mixin('redux')
     this.use({
-      songs: 'songs.playlist',
-      song: 'songs.playing',
-      isPlaying: 'songs.isPlaying'
+      songs: 'userSongs.songs',
+      song: 'userSongs.playing',
+      isPlaying: 'userSongs.o.isPlaying'
     })
     
     this.play = function (force) {

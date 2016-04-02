@@ -25,6 +25,10 @@ module.exports = {
 
   shuffle: { type: 'shuffle' },
 
+  playSort: function (order) {
+    return { type: 'sort by play count', order: order }
+  },
+
   deleteActive: { type: 'delete active' },
 
   addingSong: { type: 'adding song' }

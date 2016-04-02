@@ -136,9 +136,9 @@
   
     this.mixin('redux')
     this.use({
-      songs: 'songs.playlist',
-      activeIndex: 'songs.activeIndex',
-      processingSong: 'songs.processingSong',
+      songs: 'userSongs.songs',
+      activeIndex: 'userSongs.o.activeIndex',
+      processingSong: 'userSongs.o.processingSong',
       playCounts: 'stats.songCounts',
       playCount: 'stats.maxCount'
     })
