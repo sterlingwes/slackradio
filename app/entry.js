@@ -10,10 +10,10 @@ import windowReducer from './store/window.reducer'
 import './fonts/fonts.scss'
 import './playlist/loader.scss'
 import './player/player.scss'
-import './player/player.tag'
-import './playlist/playlist.tag'
-import './player/track-circle.tag'
-import './player/pie.tag'
+import './player/player.tag.html'
+import './playlist/playlist.tag.html'
+import './player/track-circle.tag.html'
+import './player/pie.tag.html'
 
 var RootReducer = combineReducers({
   songs: playlistReducer.fn,

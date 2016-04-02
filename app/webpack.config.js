@@ -22,7 +22,7 @@ config.module = {
         presets: ['es2015']
       }
     },
-    { test: /\.tag$/, loader: 'tag' },
+    { test: /\.tag.html$/, loader: 'tag' },
     { test: /\.scss$/, loader: 'style!css!sass' },
     { test: /\.(ttf|eot|svg|woff)/, loaders: ['url?limit=100000'] }
   ]
