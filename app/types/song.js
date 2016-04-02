@@ -1,4 +1,5 @@
 const pick = require('lodash.pick')
+const c = require('../constants')
 
 const paramKeys = [
   'id',
@@ -23,10 +24,29 @@ function Song (params) {
 
 Song.prototype.parseTitle = function () {
   var title = this.o.title || this.o.fulltitle
-  title = title.split(/\s+-\s+/)
+
+  // split our title on common delimiters
+  var delims = c.songTitle.delimiters.map(delim => `\\${delim}`).join('|')
+  var splitRgx = new RegExp(`[${delims}]`)
+  title = title.split(splitRgx)
+
   this.artist = title[0]
   this.artist = this.o.creator || this.artist
   this.title = title[1] || title[0]
+
+  // strip common 'tags'
+  var replaceables = c.songTitle.removable.join('|')
+  var replaceRgx = new RegExp(`[\\{\\(\\[]?(${replaceables})[\\]\\)\\}]?`, 'i')
+  this.title = this.title.replace(replaceRgx, '')
+
+  if (this.artist === this.title) this.artist = ''
+}
+
+Song.prototype.printTitle = function () {
+  var title = this.artist
+  if (title) title += ' - '
+  title += this.title
+  return title
 }
 
 Song.prototype.parseFilename = function () {
