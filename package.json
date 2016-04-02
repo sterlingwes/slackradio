@@ -35,6 +35,7 @@
     "knuth-shuffle": "^1.0.1",
     "lodash.find": "^4.2.0",
     "lodash.pick": "^4.1.0",
+    "lodash.values": "^4.1.0",
     "node-sass": "^3.4.2",
     "redux": "^3.3.1",
     "request": "^2.69.0",
