@@ -12,7 +12,6 @@
       <div class={ control: 1, play: 1, playing: state.isPlaying } onclick={ play }></div>
     </div>
 
-    <audio-player song={ state.song } onend={ onEnd }></audio-player>
   </div>
   
   <style>
@@ -32,7 +31,7 @@
   </style>
 
   <script>
-    var player
+    var audio = require('./audio')
 
     this.mixin('redux')
     this.use({
@@ -51,20 +50,21 @@
     this.stop = function () {
       this.store.trigger('pause')
     }
-    
-    this.onEnd = function () {
-      this.store.trigger('nextSong')
-    }.bind(this)
 
     this.store.on('songChanged', function () {
       this.play(true)
     }.bind(this))
 
     this.start = function () {
-      player = this.tags['audio-player']  
       this.store.trigger('queueSong')
     }
 
     this.start()
+
+    this.on('mount', function () {
+      audio(this.store)
+    }.bind(this))
+
+    this.on('update', function () {})
   </script>
 </player>

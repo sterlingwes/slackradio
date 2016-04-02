@@ -40,5 +40,13 @@ window.SlackRadio = global.SlackRadio = {
 
   registerStore: function (store) {
     reduxStore = store
+  },
+
+  focused: function () {
+    reduxStore.trigger('windowFocus')
+  },
+
+  unfocused: function () {
+    reduxStore.trigger('windowLostFocus')
   }
 }

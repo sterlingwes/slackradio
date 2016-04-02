@@ -173,5 +173,7 @@
     this.store.on('processedSong', () => {
       document.getElementById('songUrl').value = ''
     })
+    
+    this.on('update', function () {})
   </script>
 </playlist>

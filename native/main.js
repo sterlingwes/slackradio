@@ -25,6 +25,9 @@ function createWindow () {
   // and load the index.html of the app.
   mainWindow.loadURL('file://' + rootTemplate)
 
+  // handle focus & blur
+  require('./windowState')(electron, mainWindow)
+
   // Open the DevTools.
   // mainWindow.webContents.openDevTools()
 
@@ -36,6 +39,9 @@ function createWindow () {
     mainWindow = null
   })
 }
+
+// ensure our app has priority while in the background
+app.commandLine.appendSwitch('disable-renderer-backgrounding')
 
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.

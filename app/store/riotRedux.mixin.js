@@ -27,6 +27,14 @@ function updateState () {
   }
 }
 
+export function mapStateSubset (paths) {
+  this._reduxUsePaths = Object.keys(paths).map(function (key) {
+    return [key, paths[key].split('.')]
+  })
+  this._unsubscribe = _store.subscribe(updateState.bind(this))
+  updateState.call(this)
+}
+
 riot.mixin('redux', {
   init: function () {
     this.store = _store
@@ -38,13 +46,7 @@ riot.mixin('redux', {
   dispatch: function (type, data) {
     _store.dispatch(Object.assign({type: type}, data))
   },
-  use: function (paths, used) {
-    this._reduxUsePaths = Object.keys(paths).map(function (key) {
-      return [key, paths[key].split('.')]
-    })
-    this._unsubscribe = _store.subscribe(updateState.bind(this))
-    updateState.call(this)
-  }
+  use: mapStateSubset
 })
 
 export default function setReduxMixinStore (store) {
