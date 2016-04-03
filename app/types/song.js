@@ -60,7 +60,12 @@ Song.prototype.parseFilename = function () {
 
 Song.prototype.parseTime = function () {
   this.time = Math.ceil(this.o.duration / 60 * 100) / 100
-  this.prettyTime = this.time.toString().split('.').join(':')
+  this.prettyTime = this.time.toString().split('.')
+  if (this.prettyTime.length === 1) {
+    this.prettyTime = this.prettyTime[0] + ':00'
+    return
+  }
+  this.prettyTime = this.prettyTime.join(':')
   if (/:[0-9]$/.test(this.prettyTime)) this.prettyTime += '0'
 }
 
