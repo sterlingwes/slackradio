@@ -1,3 +1,4 @@
+/* globals SlackRadio */
 const Playlist = require('../types/playlist')
 const Song = require('../types/song')
 const storage = require('./storage')
@@ -84,6 +85,7 @@ function reducerFn (state = initialState, action) {
     case 'delete active':
       var currentIndex = playlist.o.activeIndex
       var index = playlist.o.activeIndex + 1
+      SlackRadio.fs.unlink(playlist.playing.getFsPath()) // not great
       playlist.setSong(index)
       playlist.remove(currentIndex)
       storage.write(playlistKey, playlist)
@@ -96,12 +98,12 @@ function reducerFn (state = initialState, action) {
 function init (store) {
   mapActions(actions, store)
 
-  window.SlackRadio.ipc.on('fetchedSong', function (e, song) {
+  SlackRadio.ipc.on('fetchedSong', function (e, song) {
     var updatedSong = new Song(song)
     store.trigger('fetchedSong', updatedSong.id)
   })
 
-  window.SlackRadio.ipc.on('acquiredSong', function (e, song) {
+  SlackRadio.ipc.on('acquiredSong', function (e, song) {
     store.dispatch({ type: 'add song', song: new Song(song) })
     store.trigger('processedSong')
   })

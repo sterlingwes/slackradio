@@ -85,6 +85,10 @@ Song.prototype.getFile = function () {
   return '../media/' + this.filename
 }
 
+Song.prototype.getFsPath = function () {
+  return 'media/' + this.filename
+}
+
 Song.prototype.getTime = function () {
   return this.prettyTime
 }
