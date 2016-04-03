@@ -19,8 +19,16 @@ module.exports = {
 
   playOrPause: { type: 'toggle play' },
 
-  songPicked: function (i) {
-    return { type: 'pick song', index: i }
+  songPicked: function (i, isPlaying) {
+    return { type: 'pick song', index: i, play: isPlaying }
+  },
+
+  fetchSong: function (songId) {
+    return { type: 'fetch song', id: songId }
+  },
+
+  fetchedSong: function (songId) {
+    return { type: 'fetched song', id: songId }
   },
 
   shuffle: { type: 'shuffle' },

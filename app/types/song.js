@@ -1,3 +1,4 @@
+/* globals SlackRadio */
 const pick = require('lodash.pick')
 const c = require('../constants')
 
@@ -8,18 +9,22 @@ const paramKeys = [
   'creator',
   'duration',
   'extractor',
-  'thumbnail'
+  'thumbnail',
+  'webpage_url'
 ]
 
 function Song (params) {
   this.id = params.id
   this.elapsed = 0
+  this.exists = false
 
   this.o = pick(params, paramKeys)
 
   this.parseTitle()
   this.parseFilename()
   this.parseTime()
+
+  this.checkExists() // depends on filename parsing
 }
 
 Song.prototype.parseTitle = function () {
@@ -94,6 +99,23 @@ Song.prototype.getMime = function () {
 
 Song.prototype.setElapsed = function (pct) {
   this.elapsed = pct
+}
+
+Song.prototype.checkExists = function () {
+  var result
+  try {
+    result = SlackRadio.fs.statSync('media/' + this.filename)
+  } catch (e) {}
+  if (result) this.exists = true
+}
+
+Song.prototype.getUrl = function () {
+  if (this.o.webpage_url) return this.o.webpage_url
+  return 'https://www.youtube.com/watch?v=' + this.id
+}
+
+Song.prototype.fetchSong = function () {
+  SlackRadio.ipc.send('fetchSong', this.getUrl())
 }
 
 Song.prototype.clone = function () {

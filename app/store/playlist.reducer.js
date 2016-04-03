@@ -1,4 +1,5 @@
 const Playlist = require('../types/playlist')
+const Song = require('../types/song')
 const storage = require('./storage')
 const mapActions = require('../utils/mapActions')
 const actions = require('./playlist.actions')
@@ -26,7 +27,7 @@ function reducerFn (state = initialState, action) {
       break
 
     case 'pick song':
-      playlist.setSong(action.index)
+      playlist.setSong(action.index, action.play)
       break
 
     case 'song progress':
@@ -40,6 +41,19 @@ function reducerFn (state = initialState, action) {
     case 'add song':
       playlist.add(action.song)
       storage.write(playlistKey, playlist) // probably shouldn't do this here...
+      break
+
+    case 'fetch song':
+      playlist.fetching.push(action.id)
+      break
+
+    case 'fetched song':
+      playlist.fetched(action.id)
+      var updatedSong = playlist.findById(action.id)
+      if (updatedSong) updatedSong.exists = true
+      if (playlist.playing && playlist.playing.id === action.id) {
+        playlist.setPlayState(true)
+      }
       break
 
     case 'play':
@@ -78,6 +92,11 @@ function reducerFn (state = initialState, action) {
 
 function init (store) {
   mapActions(actions, store)
+
+  window.SlackRadio.ipc.on('fetchedSong', function (e, song) {
+    var updatedSong = new Song(song)
+    store.trigger('fetchedSong', updatedSong.id)
+  })
 
   window.SlackRadio.ipc.on('acquiredSong', function (e, song) {
     store.dispatch({ type: 'add song', song: new Song(song) })

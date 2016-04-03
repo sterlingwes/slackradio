@@ -2,7 +2,7 @@
   
   <div class="tracklist">
     <div each={ song, i in state.songs } 
-      class={ track: 1, active: state.activeIndex === i }
+      class={ track: 1, active: state.activeIndex === i, exists: song.exists }
       onclick={ pickSong }
       >
         <div class="thumb" style={ getBgImage(song.getThumb()) }></div>
@@ -82,6 +82,27 @@
     playlist .thumb {
       display: inline-block;
     }
+    
+    playlist .track {
+      position: relative;
+      border-bottom: 1px solid #222;
+      cursor: pointer;
+      font-style: italic;
+      color: #696969
+    }
+    
+    playlist .track.exists {
+      font-style: normal;
+      color: #aaa
+    }
+    
+    playlist .track.active {
+      color: #aaa
+    }
+
+    playlist .track.active.exists {
+      color: #fff
+    }
 
     playlist .track .title {
       position: absolute;
@@ -100,16 +121,6 @@
       left: 40px;
       bottom: 0%;
       background: #232323
-    }
-    
-    playlist .track {
-      position: relative;
-      border-bottom: 1px solid #222;
-      cursor: pointer
-    }
-    
-    playlist .track.active {
-      color: #fff
     }
     
     playlist .thumb {
@@ -160,7 +171,13 @@
     }
     
     this.pickSong = function (e) {
-      this.store.trigger('songPicked', e.item.i)
+      var playing = true
+      if (!e.item.song.exists) {
+        e.item.song.fetchSong()
+        playing = false
+        this.store.trigger('fetchSong', e.item.song.id)
+      }
+      this.store.trigger('songPicked', e.item.i, playing)
     }
     
     this.addSong = function (e) {

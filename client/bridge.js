@@ -5,6 +5,12 @@ window.SlackRadio = global.SlackRadio = {
   ipc: require('../client/ipc'),
 
   next: function () {
+    var state = reduxStore.getState()
+    var nextSong = state.userSongs.getNext()
+    if (!nextSong || !nextSong.exists) {
+      nextSong.fetchSong()
+      return reduxStore.trigger('fetchSong', nextSong.id)
+    }
     reduxStore.trigger('nextSong')
   },
 
@@ -14,15 +20,16 @@ window.SlackRadio = global.SlackRadio = {
     if (song && song.elapsed > 3) {
       return reduxStore.trigger('restartSong')
     }
+    var lastSong = state.userSongs.getLast()
+    if (!lastSong.exists) {
+      lastSong.fetchSong()
+      return reduxStore.trigger('fetchSong', lastSong.id)
+    }
     reduxStore.trigger('prevSong')
   },
 
   play: function () {
     reduxStore.trigger('playOrPause')
-  },
-
-  restart: function () {
-    reduxStore.trigger('restartSong')
   },
 
   shuffle: function () {
@@ -58,5 +65,7 @@ window.SlackRadio = global.SlackRadio = {
 
   unfocused: function () {
     reduxStore.trigger('windowLostFocus')
-  }
+  },
+
+  fs: require('fs')
 }
