@@ -6,6 +6,9 @@
   </div>
   <div class="cover" style={ coverStyle }>
     <div class="coverimg" style={ imgStyle }></div>
+    <div class="coverloading" style={ loaderStyle } if={ !state.song.exists }>
+      <loading-circles style={ loaderSpinnerStyle }></loading-circles>
+    </div>
   </div>
 
   <script>
@@ -60,6 +63,17 @@
         width: coverWidth + 'px',
         height: coverWidth + 'px',
         'background-image': 'url(' + this.state.song.getThumb() + ')'
+      })
+      
+      this.loaderStyle = makeStyle({
+        width: coverWidth + 'px',
+        height: coverWidth + 'px',
+        top: '-' + coverWidth + 'px'
+      })
+      
+      this.loaderSpinnerStyle = makeStyle({
+        position: 'relative',
+        top: (coverWidth / 2 - 35) + 'px'
       })
 
       if (this.state.isPlaying) {

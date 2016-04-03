@@ -16,6 +16,8 @@ import './player/player.tag.html'
 import './playlist/playlist.tag.html'
 import './player/track-circle.tag.html'
 import './player/pie.tag.html'
+import './widgets/loadingBars.tag.html'
+import './widgets/loadingCircles.tag.html'
 
 var RootReducer = combineReducers({
   userSongs: playlistReducer.fn,

@@ -44,6 +44,12 @@ function AudioElement (store) {
   }
 
   this.onEnd = function () {
+    var state = store.getState()
+    var nextSong = state.userSongs.getNext()
+    if (!nextSong || !nextSong.exists) {
+      nextSong.fetchSong()
+      return store.trigger('fetchSong', nextSong.id)
+    }
     store.trigger('nextSong')
   }
 

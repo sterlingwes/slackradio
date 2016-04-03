@@ -71,6 +71,14 @@ track-circle .coverimg {
   margin: 0 auto;
 }
 
+track-circle .coverloading {
+  position: relative;
+  margin: 0 auto;
+  border-radius: 50%;
+  background-color: #000;
+  opacity: 0.7
+}
+
 .controls {
   position: relative;
   top: 40px;

@@ -19,13 +19,7 @@
       placeholder="https://www.youtube.com/watch?v=xxxxxxxxxxxxx" />
   </div>
 
-  <div if={ state.processingSong } class="spinner">
-    <div class="rect1"></div>
-    <div class="rect2"></div>
-    <div class="rect3"></div>
-    <div class="rect4"></div>
-    <div class="rect5"></div>
-  </div>
+  <loading-bars loading={ state.processingSong } class="spinner"></loading-bars>
   
   <style>
     playlist {
@@ -171,13 +165,11 @@
     }
     
     this.pickSong = function (e) {
-      var playing = true
       if (!e.item.song.exists) {
         e.item.song.fetchSong()
-        playing = false
-        this.store.trigger('fetchSong', e.item.song.id)
+        return this.store.trigger('fetchSong', e.item.song.id)
       }
-      this.store.trigger('songPicked', e.item.i, playing)
+      this.store.trigger('songPicked', e.item.i)
     }
     
     this.addSong = function (e) {

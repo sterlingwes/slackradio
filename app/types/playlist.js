@@ -32,6 +32,17 @@ Playlist.prototype.getNext = function () {
   return this.songs[next]
 }
 
+Playlist.prototype.indexOf = function (songId) {
+  var index = -1
+  find(this.songs, function (song, i) {
+    if (song.id === songId) {
+      index = i
+      return true
+    }
+  })
+  return index
+}
+
 Playlist.prototype.findById = function (songId) {
   return find(this.songs, { id: songId })
 }

@@ -44,6 +44,8 @@ function reducerFn (state = initialState, action) {
       break
 
     case 'fetch song':
+      var idx = playlist.indexOf(action.id)
+      playlist.setSong(idx, false)
       playlist.fetching.push(action.id)
       break
 
@@ -52,6 +54,7 @@ function reducerFn (state = initialState, action) {
       var updatedSong = playlist.findById(action.id)
       if (updatedSong) updatedSong.exists = true
       if (playlist.playing && playlist.playing.id === action.id) {
+        playlist.playing.exists = true
         playlist.setPlayState(true)
       }
       break
