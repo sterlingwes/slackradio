@@ -41,6 +41,7 @@
     "request": "^2.69.0",
     "riot": "^2.3.17",
     "sass-loader": "^3.2.0",
+    "slack": "^6.1.0",
     "streamify": "^0.2.5",
     "style-loader": "^0.13.1",
     "stylus-loader": "^1.5.1",
