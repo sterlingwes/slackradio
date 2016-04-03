@@ -10,9 +10,8 @@ var initialState = storage.read(statsKey, {
   maxCount: 0
 })
 
-if (!initialState.maxCount) {
-  initialState.maxCount = Math.max.apply(Math, values(initialState.songCounts))
-}
+var counts = values(initialState.songCounts).sort(function (a, b) { return b - a })
+initialState.maxCount = counts[0]
 
 function reducerFn (state = initialState, action) {
   var newState = Object.assign({}, state)

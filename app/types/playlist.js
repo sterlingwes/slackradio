@@ -29,6 +29,7 @@ Playlist.prototype.getLast = function () {
 
 Playlist.prototype.getNext = function () {
   var next = this.o.activeIndex + 1
+  if (next >= this.songs.length) return this.songs[0]
   return this.songs[next]
 }
 
