@@ -67,5 +67,17 @@ window.SlackRadio = global.SlackRadio = {
     reduxStore.trigger('windowLostFocus')
   },
 
+  showRadio: function () {
+    reduxStore.trigger('routeChange', 'radio')
+  },
+
+  showLibrary: function () {
+    reduxStore.trigger('routeChange', 'playlist')
+  },
+
+  showSettings: function () {
+    reduxStore.trigger('routeChange', 'settings')
+  },
+
   fs: require('fs')
 }

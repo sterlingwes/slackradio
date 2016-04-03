@@ -1,0 +1,31 @@
+<pages>
+  <playlist if={ state.mode === 'playlist' }></playlist>
+  <radio if={ state.mode === 'radio' }></radio>
+  <settings if={ state.mode === 'settings' }></settings>
+
+  <style>
+    pages {
+      position: absolute;
+      top: 0; bottom: 0; right: 0;
+      left: 300px;
+      background: #171717;
+    }
+
+    pages > * {
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      right: 0;
+      left: 0px;
+    }
+  </style>
+
+  <script>
+    this.mode = 'playlist'
+
+    this.mixin('redux')
+    this.use({
+      mode: 'app.mode'
+    })
+  </script>
+</pages>

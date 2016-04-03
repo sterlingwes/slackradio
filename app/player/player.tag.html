@@ -13,13 +13,13 @@
     </div>
 
     <div class="options">
-      <div class="icon icon-vynil">
+      <div class={icon:1, 'icon-vynil':1, active:state.route === 'radio'} onclick={ showRadio }>
         <span class="icon-label">Radio</span>
       </div>
-      <div class="icon icon-vallet active">
+      <div class={icon:1, 'icon-vallet':1, active:state.route === 'playlist'} onclick={ showLibrary }>
         <span class="icon-label">Library</span>
       </div>
-      <div class="icon icon-settings">
+      <div class={icon:1, 'icon-settings':1, active:state.route === 'settings'} onclick={ showSettings }>
         <span class="icon-label">Settings</span>
       </div>
     </div>
@@ -80,8 +80,21 @@
     this.use({
       songs: 'userSongs.songs',
       song: 'userSongs.playing',
-      isPlaying: 'userSongs.o.isPlaying'
+      isPlaying: 'userSongs.o.isPlaying',
+      route: 'app.mode'
     })
+
+    this.showRadio = function () {
+      this.store.trigger('routeChange', 'radio')
+    }
+
+    this.showLibrary = function () {
+      this.store.trigger('routeChange', 'playlist')
+    }
+
+    this.showSettings = function () {
+      this.store.trigger('routeChange', 'settings')
+    }
     
     this.play = function (force) {
       if (force !== true && this.state.isPlaying) {

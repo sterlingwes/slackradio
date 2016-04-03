@@ -7,5 +7,8 @@ module.exports = {
   'CommandOrControl+S': 'shuffle',
   'CommandOrControl+P': 'sortByPlays',
   'CommandOrControl+L': 'focusAdd',
+  'CommandOrControl+1': 'showRadio',
+  'CommandOrControl+2': 'showLibrary',
+  'CommandOrControl+3': 'showSettings',
   'Space': 'play'
 }
