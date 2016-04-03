@@ -15,11 +15,13 @@
   <div class="trackadd">
     <input type="text" id="songUrl"
       onchange={ addSong }
+      onblur={ styleAddInput }
       disabled={ state.processingSong }
+      style={ trackAddInputStyle }
       placeholder="https://www.youtube.com/watch?v=xxxxxxxxxxxxx" />
   </div>
 
-  <loading-bars loading={ state.processingSong } class="spinner"></loading-bars>
+  <loading-bars loading={ state.processingSong }></loading-bars>
   
   <style>
     playlist {
@@ -66,11 +68,6 @@
     
     ::-webkit-input-placeholder { /* WebKit, Blink, Edge */
       color: #444;
-    }
-    
-    playlist .spinner {
-      position: absolute;
-      right: 0; bottom: -95px
     }
     
     playlist .thumb {
@@ -137,7 +134,11 @@
   </style>
 
   <script>
+    var makeStyle = require('../utils/makeStyle.js')
     var yturl = require('youtube-url')
+    var tracklistEl
+  
+    this.trackAddInputStyle = ''
   
     this.mixin('redux')
     this.use({
@@ -172,6 +173,15 @@
       this.store.trigger('songPicked', e.item.i)
     }
     
+    this.styleAddInput = function (e) {
+      var url = e.target.value
+      if (!yturl.valid(url)) {
+        this.trackAddInputStyle = makeStyle({ color: 'red' })
+      } else {
+        this.trackAddInputStyle = makeStyle({ color: '#fff' })
+      }
+    }
+    
     this.addSong = function (e) {
       var url = e.target.value
       if (!yturl.valid(url)) return
@@ -181,6 +191,11 @@
 
     this.store.on('processedSong', () => {
       document.getElementById('songUrl').value = ''
+      tracklistEl.scrollTop = tracklistEl.scrollHeight
+    })
+
+    this.on('mount', function () {
+      tracklistEl = document.querySelectorAll('.tracklist')[0]
     })
     
     this.on('update', function () {})

@@ -9,13 +9,14 @@ import windowReducer from './store/window.reducer'
 
 import './fonts/fonts.scss'
 import './fonts/icons.scss'
-import './playlist/loader.scss'
 import './player/player.scss'
 
 import './player/player.tag.html'
 import './playlist/playlist.tag.html'
 import './player/track-circle.tag.html'
 import './player/pie.tag.html'
+
+import './widgets/loader.scss'
 import './widgets/loadingBars.tag.html'
 import './widgets/loadingCircles.tag.html'
 
