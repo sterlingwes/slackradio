@@ -1,53 +1,54 @@
-var reduxStore
+var electron = require('electron')
 
-window.SlackRadio = global.SlackRadio = {
+var sr = window.SlackRadio = global.SlackRadio = {
   add: require('../client/addSong'),
   ipc: require('../client/ipc'),
 
   next: function () {
-    var state = reduxStore.getState()
+    var state = sr._store.getState()
     var nextSong = state.userSongs.getNext()
     if (!nextSong || !nextSong.exists) {
       nextSong.fetchSong()
-      return reduxStore.trigger('fetchSong', nextSong.id)
+      return sr._store.trigger('fetchSong', nextSong.id)
     }
-    reduxStore.trigger('nextSong')
+    sr._store.trigger('nextSong')
   },
 
   prev: function () {
-    var state = reduxStore.getState()
+    var state = sr._store.getState()
     var song = state.userSongs.playing
     if (song && song.elapsed > 3) {
-      return reduxStore.trigger('restartSong')
+      return sr._store.trigger('restartSong')
     }
     var lastSong = state.userSongs.getLast()
     if (!lastSong.exists) {
       lastSong.fetchSong()
-      return reduxStore.trigger('fetchSong', lastSong.id)
+      return sr._store.trigger('fetchSong', lastSong.id)
     }
-    reduxStore.trigger('prevSong')
+    sr._store.trigger('prevSong')
   },
 
   play: function () {
-    reduxStore.trigger('playOrPause')
+    sr._store.trigger('playOrPause')
   },
 
   shuffle: function () {
-    reduxStore.trigger('shuffle')
+    sr._store.trigger('shuffle')
   },
 
   sortByPlays: function () {
-    var state = reduxStore.getState()
+    var state = sr._store.getState()
     var playCounts = state.stats.songCounts
     var songIds = Object.keys(playCounts)
     songIds.sort(function (a, b) {
       return (playCounts[a] || 0) - (playCounts[b] || 0)
     })
-    reduxStore.trigger('playSort', songIds)
+    sr._store.trigger('playSort', songIds)
   },
 
   delete: function () {
-    reduxStore.trigger('deleteActive')
+    sr._store.trigger('deleteActive')
+    sr.getMediaSize()
   },
 
   focusAdd: function () {
@@ -56,28 +57,37 @@ window.SlackRadio = global.SlackRadio = {
   },
 
   registerStore: function (store) {
-    reduxStore = store
+    sr._store = store
   },
 
   focused: function () {
-    reduxStore.trigger('windowFocus')
+    sr._store.trigger('windowFocus')
   },
 
   unfocused: function () {
-    reduxStore.trigger('windowLostFocus')
+    sr._store.trigger('windowLostFocus')
   },
 
   showRadio: function () {
-    reduxStore.trigger('routeChange', 'radio')
+    sr._store.trigger('routeChange', 'radio')
   },
 
   showLibrary: function () {
-    reduxStore.trigger('routeChange', 'playlist')
+    sr._store.trigger('routeChange', 'playlist')
   },
 
   showSettings: function () {
-    reduxStore.trigger('routeChange', 'settings')
+    sr._store.trigger('routeChange', 'settings')
   },
 
-  fs: require('fs')
+  getMediaSize: function (cb) {
+    return require('../client/mediaSize')(sr._store, cb)
+  },
+
+  deleteMedia: function (cb) {
+    return require('../client/mediaDelete')(sr._store, cb)
+  },
+
+  fs: require('fs'),
+  dialog: electron.remote.dialog
 }

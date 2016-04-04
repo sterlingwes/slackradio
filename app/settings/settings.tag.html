@@ -1,5 +1,49 @@
 <settings>
-  <panel title="Settings">
-    Some content
+  <panel header="Settings">
+    <panel-section header="Your Data" button="Download" action="saveJson">
+      <p>You can save your playlist & other settings to a file you can import into other SlackRadio apps.</p>
+    </panel-section>
+
+    <panel-section header="Media Cache" danger-button="Delete All Media" action="deleteMedia" disable={ parent.deleting }>
+      <p>SlackRadio streams audio data to your hard disk. It's a good idea to clear this cache occasionally if you find it taking up too much space.</p>
+      <p>Your media cache is currently { parent.parent.state.size }.</p>
+    </panel-section>
   </panel>
+
+  <script>
+    var storage = require('../store/storage')
+
+    this.mixin('redux')
+    this.use({
+      size: 'app.mediaSize'
+    })
+
+    this.saveJson = function () {
+      var options = {
+        title: 'Save / Export SlackRadio Settings',
+        defaultPath: '~/SlackRadioExport',
+        filters: [
+          { name: 'JSON Files', extensions: ['json'] }
+        ]
+      }
+      SlackRadio.dialog.showSaveDialog(options, function (filePath) {
+        SlackRadio.fs.writeFile(filePath, storage.toJSON(), function (err) {
+          if(err) console.error(err);
+        })
+      })
+    }
+    
+    this.deleteMedia = function () {
+      this.deleting = true
+      SlackRadio.deleteMedia(() => {
+        this.store.trigger('syncFilesystem')
+        this.deleting = false
+        SlackRadio.getMediaSize()
+      })
+    }
+
+    this.on('mount', () => {
+      SlackRadio.getMediaSize()
+    })
+  </script>
 </settings>

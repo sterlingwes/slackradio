@@ -14,6 +14,7 @@ import './player/player.scss'
 
 import './layout/pages.tag.html'
 import './layout/panel.tag.html'
+import './layout/panelSection.tag.html'
 
 import './player/player.tag.html'
 import './player/track-circle.tag.html'

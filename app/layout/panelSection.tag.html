@@ -1,0 +1,49 @@
+<panel-section>
+  <h3>{ opts.header }</h3>
+  <yield/>
+
+  <div if={ opts.button } class="action-btn" onclick={ handleAction }>
+    { opts.button }
+  </div>
+  
+  <div if={ opts.dangerButton }
+    class={ 'action-btn':1, 'action-btn--danger':1, 'action-btn--disabled':opts.disable }
+    onclick={ handleAction }>
+    { opts.dangerButton }
+  </div>
+
+  <style>
+    panel-section h3 {
+      font-family: 'LatoWeb';
+      font-weight: normal;
+      color: #ccc;
+      margin-top: 30px;
+    }
+
+    panel-section .action-btn {
+      display: inline-block;
+      padding: 10px 20px;
+      background-color: #333;
+      border-radius: 3px;
+      font-family: 'LatoWeb';
+      cursor: pointer;
+      margin-top: 5px;
+    }
+
+    panel-section .action-btn--danger {
+      background-color: #6B0000
+    }
+
+    panel-section .action-btn--disabled {
+      font-style: italic;
+      color: #555;
+      background-color: #222
+    }
+  </style>
+
+  <script>
+    this.handleAction = function () {
+      this.parent.parent[this.opts.action]()
+    }
+  </script>
+</panel-section>

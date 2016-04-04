@@ -2,7 +2,8 @@ const mapActions = require('../utils/mapActions')
 const actions = require('./app.actions')
 
 var initialState = {
-  mode: 'playlist'
+  mode: 'playlist',
+  mediaSize: 'loading'
 }
 
 function reducerFn (state = initialState, action) {
@@ -11,6 +12,11 @@ function reducerFn (state = initialState, action) {
   switch (action.type) {
     case 'route changed':
       newState.mode = action.path
+      break
+
+    case 'size media':
+      var size = action.size
+      newState.mediaSize = size === '0 B' ? 'empty' : size
       break
   }
 

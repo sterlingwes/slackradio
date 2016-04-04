@@ -39,6 +39,8 @@ module.exports = {
 
   deleteActive: { type: 'delete active' },
 
-  addingSong: { type: 'adding song' }
+  addingSong: { type: 'adding song' },
+
+  syncFilesystem: { type: 'check files' }
 
 }

@@ -90,6 +90,10 @@ function reducerFn (state = initialState, action) {
       playlist.remove(currentIndex)
       storage.write(playlistKey, playlist)
       break
+
+    case 'check files':
+      playlist.checkFiles() // should probably handle this as an action
+      break
   }
 
   return playlist
@@ -101,11 +105,13 @@ function init (store) {
   SlackRadio.ipc.on('fetchedSong', function (e, song) {
     var updatedSong = new Song(song)
     store.trigger('fetchedSong', updatedSong.id)
+    SlackRadio.getMediaSize()
   })
 
   SlackRadio.ipc.on('acquiredSong', function (e, song) {
     store.dispatch({ type: 'add song', song: new Song(song) })
     store.trigger('processedSong')
+    SlackRadio.getMediaSize()
   })
 }
 

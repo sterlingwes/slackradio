@@ -16,6 +16,12 @@ function Playlist (songs, options, playing) {
   Object.assign(this.o, options)
 }
 
+Playlist.prototype.checkFiles = function () {
+  this.songs.forEach(song => {
+    song.checkExists()
+  })
+}
+
 Playlist.prototype.get = function (index) {
   if (typeof index === 'undefined') return this.songs.slice(0)
   return this.songs[index]

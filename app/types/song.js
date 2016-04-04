@@ -114,7 +114,7 @@ Song.prototype.checkExists = function () {
   var result
   try {
     result = SlackRadio.fs.statSync('media/' + this.filename)
-  } catch (e) {}
+  } catch (e) { this.exists = false }
   if (result) this.exists = true
 }
 
