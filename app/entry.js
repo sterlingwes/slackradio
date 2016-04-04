@@ -1,9 +1,12 @@
+// require('./api')
+
 import riot from 'riot'
 import ReduxMixin from './store/riotRedux.mixin'
 import { combineReducers, createStore, applyMiddleware } from 'redux'
 import createLogger from './utils/logger'
 
 import appReducer from './store/app.reducer'
+import radioReducer from './store/radio.reducer'
 import playlistReducer from './store/playlist.reducer'
 import statsReducer from './store/stats.reducer'
 import windowReducer from './store/window.reducer'
@@ -30,6 +33,7 @@ import './widgets/loadingCircles.tag.html'
 
 var RootReducer = combineReducers({
   app: appReducer.fn,
+  radio: radioReducer.fn,
   userSongs: playlistReducer.fn,
   stats: statsReducer.fn,
   window: windowReducer.fn
@@ -49,6 +53,7 @@ var Store = ReduxMixin(
 
 window.SlackRadio.registerStore(Store)
 appReducer.init(Store)
+radioReducer.init(Store)
 playlistReducer.init(Store)
 statsReducer.init(Store)
 windowReducer.init(Store)

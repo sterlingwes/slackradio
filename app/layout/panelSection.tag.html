@@ -2,7 +2,9 @@
   <h3>{ opts.header }</h3>
   <yield/>
 
-  <div if={ opts.button } class="action-btn" onclick={ handleAction }>
+  <div if={ opts.button }
+    class={ 'action-btn':1, 'action-btn--disabled':opts.disable }
+    onclick={ handleAction }>
     { opts.button }
   </div>
   

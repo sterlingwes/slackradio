@@ -28,6 +28,9 @@ function createWindow () {
   // handle focus & blur
   require('./windowState')(electron, mainWindow)
 
+  // handle slack auth
+  require('./slack')(electron)
+
   // Open the DevTools.
   // mainWindow.webContents.openDevTools()
 
