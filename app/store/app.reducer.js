@@ -1,9 +1,11 @@
 const mapActions = require('../utils/mapActions')
 const actions = require('./app.actions')
+const storage = require('./storage')
 
 var initialState = {
   mode: 'playlist',
-  mediaSize: 'loading'
+  mediaSize: 'loading',
+  user: null
 }
 
 function reducerFn (state = initialState, action) {
@@ -17,6 +19,11 @@ function reducerFn (state = initialState, action) {
     case 'size media':
       var size = action.size
       newState.mediaSize = size === '0 B' ? 'empty' : size
+      break
+
+    case 'slack connected':
+      newState.user = action.user
+      storage.write('u', action.user)
       break
   }
 

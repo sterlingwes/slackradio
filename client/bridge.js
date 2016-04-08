@@ -1,6 +1,7 @@
 var electron = require('electron')
 
 var sr = window.SlackRadio = global.SlackRadio = {
+  api: require('../client/api')(),
   add: require('../client/addSong'),
   ipc: require('../client/ipc'),
 

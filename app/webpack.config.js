@@ -1,6 +1,9 @@
 const path = require('path')
+const webpack = require('webpack')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 const CleanPlugin = require('clean-webpack-plugin')
+
+const HOST = 'http://localhost:3030'
 
 var config = {}
 
@@ -29,7 +32,10 @@ config.module = {
 }
 
 const jade = require('jade')
-const rootTemplate = jade.renderFile('./index.jade', { pretty: true })
+const rootTemplate = jade.renderFile('./index.jade', {
+  pretty: true,
+  host: HOST
+})
 
 var templateCfg = {
   templateContent: rootTemplate,
@@ -38,7 +44,10 @@ var templateCfg = {
 
 config.plugins = [
   new HtmlWebpackPlugin(templateCfg),
-  new CleanPlugin(['build'])
+  new CleanPlugin(['build']),
+  new webpack.DefinePlugin({
+    HOST: '"' + (HOST || '') + '"'
+  })
 ]
 
 config.resolve = {

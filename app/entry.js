@@ -1,5 +1,3 @@
-// require('./api')
-
 import riot from 'riot'
 import ReduxMixin from './store/riotRedux.mixin'
 import { combineReducers, createStore, applyMiddleware } from 'redux'

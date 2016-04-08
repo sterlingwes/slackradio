@@ -9,4 +9,7 @@ html
     pages
     audio#audioEl
 
+    script.
+      HOST = '#{host}'
+    script(src= host + '/socket.io/socket.io.js')
     script(src='../client/bridge.js')

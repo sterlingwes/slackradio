@@ -1,3 +1,4 @@
+/* globals SlackRadio */
 var ipcRenderer = require('electron').ipcRenderer
 
 ipcRenderer.on('globalShortcut', function (e, action) {
@@ -9,9 +10,8 @@ ipcRenderer.on('globalShortcut', function (e, action) {
 })
 
 ipcRenderer.on('slackConnected', function (e, code) {
-  var api = require('../app/api/feathers')
   console.log('received code', code)
-  api.slack.create({ code: code })
+  SlackRadio.api.slack.create({ code: code })
 })
 
 module.exports = ipcRenderer

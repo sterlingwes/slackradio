@@ -1,20 +1,26 @@
 <radio>
   <panel header="Radio Stations" if={ !state.stations.length }>
-    <panel-section header="Add a Station" button="Connect Slack" action="connectSlack" disable={ parent.connecting }>
+    <panel-section if={ !state.user } header="Add a Station" button="Connect Slack" action="connectSlack" disable={ parent.connecting }>
       <p>SlackRadio stations are powered by links posted to Slack channels.</p>
       <p>Connect your Slack account to SlackRadio in order to find your team's stations.</p>
     </panel-section>
 
-    <panel-section header="Permissions">
+    <panel-section if={ !state.user } header="Permissions">
       <p>We ask for access to your list of channels to check if a radio station has already been setup by someone on your team.</p>
       <p>If no radio station has been setup, we'll ask you to provide additional permissions to allow us to read the history for the channel you want to link to SlackRadio. When we read the channel history, we only save the links users have posted to that channel that can be streamed as audio on your station.</p>
+    </panel-section>
+
+    <panel-section if={ state.user } header="Choose a Channel">
+      <p>Choose a channel from the list below to import your existing playlist.</p>
     </panel-section>
   </panel>
 
   <script>
+    var storage = require('../store/storage')
     this.mixin('redux')
     this.use({
-      stations: 'radio.stations'
+      stations: 'radio.stations',
+      user: 'app.user'
     })
 
     this.connecting = false
@@ -23,5 +29,10 @@
       this.connecting = true
       SlackRadio.ipc.send('connectSlack')
     }
+
+    SlackRadio.api.slack.on('created', (user) => {
+      this.connecting = false
+      this.store.trigger('slackConnected', user)
+    })
   </script>
 </radio>

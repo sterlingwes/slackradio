@@ -1,6 +1,6 @@
 const slack = require('../slack.json')
 const clientId = slack.clientId
-const scope = 'channels:read'
+const scope = 'channels:read users:read'
 
 module.exports = function (electron) {
   var ipc = electron.ipcMain
