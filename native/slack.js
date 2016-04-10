@@ -25,6 +25,11 @@ module.exports = function (electron) {
       if (/localhost\/srcallback/.test(newUrl)) {
         authWindow.close()
         var matchCode = newUrl.match(/code=(.*)(&||$)/)
+        if (!matchCode) {
+          ipcEvent.sender.send('slackFailed')
+          return console.warn('no auth code received')
+        }
+
         var code = matchCode[1].split('&')
         ipcEvent.sender.send('slackConnected', code[0])
       }

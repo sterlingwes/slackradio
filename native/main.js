@@ -14,6 +14,8 @@ let mainWindow
 
 function createWindow () {
   // Create the browser window.
+  // mainWindow = new BrowserWindow({ width: 1200, height: 570, frame: true })
+  // mainWindow.webContents.openDevTools()
   mainWindow = new BrowserWindow({ width: 800, height: 570, frame: false })
 
   // register song handler
@@ -30,9 +32,6 @@ function createWindow () {
 
   // handle slack auth
   require('./slack')(electron)
-
-  // Open the DevTools.
-  // mainWindow.webContents.openDevTools()
 
   // Emitted when the window is closed.
   mainWindow.on('closed', function () {

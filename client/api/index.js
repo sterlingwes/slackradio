@@ -1,4 +1,4 @@
-/* globals io, HOST */
+/* globals io, HOST, SlackRadio */
 
 var noop = function () {}
 
@@ -38,7 +38,10 @@ module.exports = function () {
     console.log(data)
   })
 
+  var hookService = app.service('slackhook')
+
   return {
-    slack: slackService
+    slack: slackService,
+    hook: hookService
   }
 }

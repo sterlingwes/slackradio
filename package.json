@@ -6,7 +6,8 @@
   "scripts": {
     "build": "cd app && ../node_modules/.bin/webpack",
     "watch": "cd app && ../node_modules/.bin/webpack --watch",
-    "start": "electron native/main.js"
+    "start": "electron native/main.js",
+    "test": "./node_modules/.bin/mocha"
   },
   "repository": {
     "type": "git",
@@ -31,6 +32,7 @@
     "css-loader": "^0.23.1",
     "del": "^2.2.0",
     "electron-ipc-stream": "^0.1.0",
+    "expect.js": "^0.3.1",
     "feathers-client": "^1.1.0",
     "file-loader": "^0.8.5",
     "filesize": "^3.2.1",
@@ -40,6 +42,7 @@
     "lodash.find": "^4.2.0",
     "lodash.pick": "^4.1.0",
     "lodash.values": "^4.1.0",
+    "mocha": "^2.4.5",
     "node-sass": "^3.4.2",
     "redux": "^3.3.1",
     "request": "^2.69.0",

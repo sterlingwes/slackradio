@@ -31,18 +31,16 @@ Song.prototype.parseTitle = function () {
   var title = this.o.title || this.o.fulltitle
 
   // split our title on common delimiters
-  var delims = c.songTitle.delimiters.map(delim => `\\${delim}`).join('|')
-  var splitRgx = new RegExp(`[${delims}]`)
-  title = title.split(splitRgx)
+  title = title.split(/\s+\-\s+/)
 
-  this.artist = title[0]
-  this.artist = this.o.creator || this.artist
+  this.artist = title.length > 1 ? title[0] : ''
+  this.artist = (this.o.creator || this.artist).trim()
   this.title = title[1] || title[0]
 
   // strip common 'tags'
   var replaceables = c.songTitle.removable.join('|')
   var replaceRgx = new RegExp(`[\\{\\(\\[]?(${replaceables})[\\]\\)\\}]?`, 'i')
-  this.title = this.title.replace(replaceRgx, '')
+  this.title = this.title.replace(replaceRgx, '').replace(/"/g, '').trim()
 
   if (this.artist === this.title) this.artist = ''
 }

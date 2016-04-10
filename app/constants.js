@@ -1,7 +1,5 @@
 module.exports = {
   songTitle: {
-    delimiters: ['-', '|'],
-
     // common tags in video titles
     // order by most to less specific
     removable: [
@@ -9,6 +7,8 @@ module.exports = {
       'Official Music Video',
       'Official Version',
       'Original Mix',
+      'Official Audio',
+      'Lyric Video',
       'Music Video',
       'Lyrics',
       'Lyric',
