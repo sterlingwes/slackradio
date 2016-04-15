@@ -39,8 +39,10 @@ module.exports = function () {
   })
 
   var hookService = app.service('slackhook')
+  var playlistService = app.service('playlists')
 
   return {
+    playlists: playlistService,
     slack: slackService,
     hook: hookService
   }

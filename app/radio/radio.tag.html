@@ -15,6 +15,12 @@
     </panel-section>
   </panel>
 
+  <div class="station-list" if={ state.stations.length }>
+    <div class="station" each={ station in state.stations } onclick={ setStation }>
+      { station.getName() }
+    </div>
+  </div>
+
   <script>
     var storage = require('../store/storage')
     this.mixin('redux')
@@ -25,14 +31,29 @@
 
     this.connecting = false
 
+    this.setStation = function (e) {
+      this.store.trigger('setStation', e.item.station.getId())
+    }
+
     this.connectSlack = function () {
       this.connecting = true
       SlackRadio.ipc.send('connectSlack')
     }
 
+    if (this.state.user) {
+      this.store.trigger('loadingPlaylists')
+      SlackRadio.api.playlists.find({ query: { team_id: this.state.team_id } })
+        .then(playlists => {
+          this.store.trigger('loadingPlaylists', false)
+          this.store.trigger('receivedPlaylists', playlists)
+          this.update()
+        })
+    }
+
     SlackRadio.api.slack.on('created', (user) => {
       this.connecting = false
       this.store.trigger('slackConnected', user)
+      this.update()
     })
   </script>
 </radio>

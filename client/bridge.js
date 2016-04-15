@@ -1,4 +1,8 @@
+var _ = require('lodash')
 var electron = require('electron')
+var Control = require('../client/playerControl')
+
+var control
 
 var sr = window.SlackRadio = global.SlackRadio = {
   api: require('../client/api')(),
@@ -29,10 +33,6 @@ var sr = window.SlackRadio = global.SlackRadio = {
     sr._store.trigger('prevSong')
   },
 
-  play: function () {
-    sr._store.trigger('playOrPause')
-  },
-
   shuffle: function () {
     sr._store.trigger('shuffle')
   },
@@ -58,6 +58,8 @@ var sr = window.SlackRadio = global.SlackRadio = {
   },
 
   registerStore: function (store) {
+    control = new Control(store)
+    _.extend(sr, control)
     sr._store = store
   },
 

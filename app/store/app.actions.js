@@ -9,5 +9,9 @@ module.exports = {
 
   slackConnected: function (user) {
     return { type: 'slack connected', user: user }
+  },
+
+  loadingPlaylists: function (isLoading) {
+    return { type: 'loading playlists', isLoading: isLoading }
   }
 }

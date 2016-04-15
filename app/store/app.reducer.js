@@ -5,7 +5,8 @@ const storage = require('./storage')
 var initialState = {
   mode: 'playlist',
   mediaSize: 'loading',
-  user: null
+  user: storage.read('u', null),
+  loadingPlaylists: false
 }
 
 function reducerFn (state = initialState, action) {
@@ -24,6 +25,10 @@ function reducerFn (state = initialState, action) {
     case 'slack connected':
       newState.user = action.user
       storage.write('u', action.user)
+      break
+
+    case 'loading playlists':
+      newState.loadingPlaylists = typeof action.isLoading === 'undefined' ? true : action.isLoading
       break
   }
 

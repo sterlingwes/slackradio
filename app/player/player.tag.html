@@ -4,8 +4,8 @@
     <track-circle></track-circle>
 
     <div class="trackdetails">
-      <div class="trackname">{ state.song.getTitle() }</div>
-      <div class="trackartist">{ state.song.getArtist() }</div>
+      <div class="trackname">{ getTitle() }</div>
+      <div class="trackartist">{ getArtist() }</div>
     </div>
 
     <div class="controls">
@@ -81,8 +81,21 @@
       songs: 'userSongs.songs',
       song: 'userSongs.playing',
       isPlaying: 'userSongs.o.isPlaying',
+      stations: 'radio.stations',
+      currentStation: 'radio.currentStation',
       route: 'app.mode'
     })
+
+    this.getTitle = function () {
+      if (this.route === 'radio' && this.state.currentStation) {
+        return this.state.currentStation
+      }
+      return this.state.song.getTitle()
+    }
+
+    this.getArtist = function () {
+      return this.state.song.getArtist()
+    }
 
     this.showRadio = function () {
       this.store.trigger('routeChange', 'radio')
