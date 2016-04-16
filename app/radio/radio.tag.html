@@ -40,7 +40,7 @@
       SlackRadio.ipc.send('connectSlack')
     }
 
-    if (this.state.user) {
+    if (this.state.user && SlackRadio.api.playlists) {
       this.store.trigger('loadingPlaylists')
       SlackRadio.api.playlists.find({ query: { team_id: this.state.team_id } })
         .then(playlists => {

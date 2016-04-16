@@ -13,5 +13,17 @@ module.exports = {
 
   loadingPlaylists: function (isLoading) {
     return { type: 'loading playlists', isLoading: isLoading }
+  },
+
+  showMessage: function (message, type) {
+    return { type: 'show flash message', msg: message, level: type }
+  },
+
+  hideMessage: function (message) {
+    return { type: 'hide flash message', msg: message }
+  },
+
+  setNetworkState: function (isConnected) {
+    return { type: 'set network state', isConnected: isConnected }
   }
 }

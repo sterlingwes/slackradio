@@ -16,6 +16,7 @@ import './player/player.scss'
 import './layout/pages.tag.html'
 import './layout/panel.tag.html'
 import './layout/panelSection.tag.html'
+import './layout/flash.tag.html'
 
 import './player/player.tag.html'
 import './player/track-circle.tag.html'
@@ -58,3 +59,4 @@ windowReducer.init(Store)
 
 riot.mount('player')
 riot.mount('pages')
+riot.mount('flash')

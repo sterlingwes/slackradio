@@ -1,0 +1,66 @@
+<flash class={ flashing: !!state.message, 'flash--warning': state.type === 'warn', 'flash--error': state.type === 'error' }>
+  
+  <div class="message">
+    { state.message }
+    <span class="dismiss" onclick={ dismiss }>&times;</span>
+  </div>
+  
+  <style>
+    flash {
+      position: absolute;
+      top: 0; right: 0; left: 0;
+      width: 100%;
+      height: 40px;
+      transform: scaleY(0);
+      transform-origin: top;
+      background-color: #62A5BF;
+      transition: transform 0.15s ease
+    }
+    
+    flash.flashing {
+      transform: scaleY(1);
+      height: 40px;
+    }
+
+    flash.flash--warning {
+      background-color: #F3951D
+    }
+
+    flash.flash--error {
+      background-color: #DA3D61
+    }
+    
+    flash.flash--success {
+      background-color: #278F0D
+    }
+    
+    flash .message {
+      padding: 5px;
+      color: #fff;
+      font-family: 'LatoWebLight';
+      font-size: 0.9em;
+      line-height: 2.1em;
+      text-align: center
+    }
+    
+    flash .dismiss {
+      position: absolute;
+      top: 3px; right: 15px;
+      font-weight: bold;
+      font-size: 1.8em;
+      cursor: pointer
+    }
+  </style>
+  
+  <script>
+    this.mixin('redux')
+    this.use({
+      message: 'app.flashMessage',
+      type: 'app.flashType'
+    })
+
+    this.dismiss = function () {
+      this.store.trigger('hideMessage')
+    }
+  </script>
+</flash>

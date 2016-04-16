@@ -9,6 +9,18 @@ var sr = window.SlackRadio = global.SlackRadio = {
   add: require('../client/addSong'),
   ipc: require('../client/ipc'),
 
+  showMessage: function (type, msg) {
+    sr._store.trigger('showMessage', type, msg)
+  },
+
+  hideMessage: function () {
+    sr._store.trigger('hideMessage')
+  },
+
+  setNetworkState: function (isConnected) {
+    sr._store.trigger('setNetworkState', isConnected)
+  },
+
   next: function () {
     var state = sr._store.getState()
     var nextSong = state.userSongs.getNext()

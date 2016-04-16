@@ -1,4 +1,4 @@
-<pages>
+<pages class={ flashing: !!state.flash }>
   <playlist if={ state.mode === 'playlist' }></playlist>
   <radio if={ state.mode === 'radio' }></radio>
   <settings if={ state.mode === 'settings' }></settings>
@@ -8,7 +8,7 @@
       position: absolute;
       top: 0; bottom: 0; right: 0;
       left: 300px;
-      background: #171717;
+      background: #171717
     }
 
     pages > * {
@@ -25,7 +25,8 @@
 
     this.mixin('redux')
     this.use({
-      mode: 'app.mode'
+      mode: 'app.mode',
+      flash: 'app.flashMessage'
     })
   </script>
 </pages>
