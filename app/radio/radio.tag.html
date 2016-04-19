@@ -83,6 +83,12 @@
         })
     }
 
+    SlackRadio.api.hook.on('songAdded', (station) => {
+      if (station && station.length) {
+        this.store.trigger('augmentPlaylist', station[0])
+      }
+    })
+
     SlackRadio.api.slack.on('created', (user) => {
       this.connecting = false
       this.store.trigger('slackConnected', user)

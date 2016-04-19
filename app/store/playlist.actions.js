@@ -49,6 +49,10 @@ module.exports = {
 
   changePlaylist: function (playlist) {
     return { type: 'change playlist', playlist: playlist }
+  },
+
+  augmentPlaylist: function (playlist) {
+    return { type: 'augment playlist', playlist: playlist }
   }
 
 }

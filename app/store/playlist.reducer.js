@@ -96,6 +96,10 @@ function reducerFn (state = initialState, action) {
     case 'change playlist':
       playlist = Playlist.fromSongs(action.playlist.songs)
       break
+
+    case 'augment playlist':
+      playlist.augment(action.playlist.songs)
+      break
   }
 
   return playlist

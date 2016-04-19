@@ -152,6 +152,10 @@ Playlist.prototype.sortById = function (order) {
   this.setActiveById()
 }
 
+Playlist.prototype.augment = function (songs) {
+  this.songs = songs.map(song => new Song(song))
+}
+
 Playlist.prototype.toJSON = function () {
   return this.songs
 }
