@@ -54,6 +54,14 @@ Playlist.prototype.findById = function (songId) {
   return find(this.songs, { id: songId })
 }
 
+Playlist.prototype.replace = function (song) {
+  var index = this.indexOf(song.id)
+  this.songs.splice(index, 1, song)
+  if (this.playing && this.playing.id === song.id) {
+    this.playing = song
+  }
+}
+
 Playlist.prototype.clone = function () {
   var list = new Playlist(this.songs.slice(0), Object.assign({}, this.o))
   if (this.playing) list.playing = this.playing

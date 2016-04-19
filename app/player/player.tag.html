@@ -120,10 +120,6 @@
       this.store.trigger('pause')
     }
 
-    this.store.on('songChanged', function () {
-      this.play(true)
-    }.bind(this))
-
     this.start = function () {
       var firstSong = this.state.songs[0]
       if (!firstSong.exists) {
@@ -132,6 +128,11 @@
       }
       this.store.trigger('queueSong')
     }
+
+    this.store.on('startRadio', () => {
+      this.start()
+      this.play(true)
+    })
 
     this.start()
 

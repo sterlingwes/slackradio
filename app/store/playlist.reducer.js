@@ -51,11 +51,9 @@ function reducerFn (state = initialState, action) {
       break
 
     case 'fetched song':
-      playlist.fetched(action.id)
-      var updatedSong = playlist.findById(action.id)
-      if (updatedSong) updatedSong.exists = true
-      if (playlist.playing && playlist.playing.id === action.id) {
-        playlist.playing.exists = true
+      playlist.fetched(action.song.id)
+      playlist.replace(action.song)
+      if (playlist.playing && playlist.playing.id === action.song.id) {
         playlist.setPlayState(true)
       }
       break
@@ -94,6 +92,10 @@ function reducerFn (state = initialState, action) {
     case 'check files':
       playlist.checkFiles() // should probably handle this as an action
       break
+
+    case 'change playlist':
+      playlist = Playlist.fromSongs(action.playlist.songs)
+      break
   }
 
   return playlist
@@ -104,7 +106,7 @@ function init (store) {
 
   SlackRadio.ipc.on('fetchedSong', function (e, song) {
     var updatedSong = new Song(song)
-    store.trigger('fetchedSong', updatedSong.id)
+    store.trigger('fetchedSong', updatedSong)
     SlackRadio.getMediaSize()
   })
 

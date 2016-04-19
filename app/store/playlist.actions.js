@@ -27,8 +27,8 @@ module.exports = {
     return { type: 'fetch song', id: songId }
   },
 
-  fetchedSong: function (songId) {
-    return { type: 'fetched song', id: songId }
+  fetchedSong: function (song) {
+    return { type: 'fetched song', song: song }
   },
 
   shuffle: { type: 'shuffle' },
@@ -41,6 +41,14 @@ module.exports = {
 
   addingSong: { type: 'adding song' },
 
-  syncFilesystem: { type: 'check files' }
+  syncFilesystem: { type: 'check files' },
+
+  loadStation: function (id) {
+    return { type: 'load station', id: id }
+  },
+
+  changePlaylist: function (playlist) {
+    return { type: 'change playlist', playlist: playlist }
+  }
 
 }

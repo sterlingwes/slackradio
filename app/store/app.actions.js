@@ -25,5 +25,9 @@ module.exports = {
 
   setNetworkState: function (isConnected) {
     return { type: 'set network state', isConnected: isConnected }
+  },
+
+  setSource: function (source) {
+    return { type: 'set source', source: source }
   }
 }

@@ -5,6 +5,7 @@ const messages = require('../constants').messages
 
 var initialState = {
   mode: 'playlist',
+  source: 'playlist',
   mediaSize: 'loading',
   user: storage.read('u', null),
   loadingPlaylists: false,
@@ -21,6 +22,10 @@ function reducerFn (state = initialState, action) {
   switch (action.type) {
     case 'route changed':
       newState.mode = action.path
+      break
+
+    case 'set source':
+      newState.source = action.source
       break
 
     case 'size media':
