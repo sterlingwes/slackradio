@@ -16,23 +16,53 @@
   </panel>
 
   <div class="station-list" if={ state.stations.length }>
-    <div class="station" each={ station in state.stations } onclick={ setStation }>
-      { station.getName() }
+    <div class="team" each={ team in getTeams() }>
+      <div class="team-name">{ team }</div>
+      <div class="channel" each={ channel in state.list[team] } onclick={ setStation }>
+        #{ channel.name }
+      </div>
     </div>
   </div>
+  
+  <style>
+    .station-list .team-name {
+      background-color: #222;
+      padding: 10px
+    }
+    
+    .station-list .channel {
+      padding: 10px;
+      font-family: 'LatoWebLight';
+      font-size: 0.9em;
+      cursor: pointer;
+      border-bottom: 1px solid #222
+    }
+  </style>
 
   <script>
     var storage = require('../store/storage')
     this.mixin('redux')
     this.use({
       stations: 'radio.stations',
+      list: 'radio.stationList',
       user: 'app.user'
     })
 
     this.connecting = false
 
+    this.getTeams = function () {
+      return Object.keys(this.state.list)
+    }
+
     this.setStation = function (e) {
-      this.store.trigger('setStation', e.item.station.getId())
+      var stationId = e.item.channel.id
+      SlackRadio.api.playlists.get(stationId)
+        .then(station => {
+          if (!station || !station.length) return SlackRadio.showMessage('stationLoadFail')
+          this.store.trigger('setSource', 'radio')
+          this.store.trigger('updateStation', station[0])
+          this.store.trigger('playStation', stationId)
+        })
     }
 
     this.connectSlack = function () {

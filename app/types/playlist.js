@@ -145,7 +145,7 @@ Playlist.prototype.sortById = function (order) {
 }
 
 Playlist.prototype.toJSON = function () {
-  return this.songs
+  return this.songs.map(song => song.toJSON())
 }
 
 Playlist.fromSongs = function (songs) {

@@ -12,8 +12,12 @@ function reducerFn (state = initialState, action) {
       state = new StationManager(action.lists.data)
       break
 
-    case 'station picked':
-      state.setCurrent(action.id)
+    case 'received playlist':
+      state.updatePlaylist(action.list)
+      break
+
+    case 'play station':
+      state.setCurrent(action.id) // also plays
       break
   }
 

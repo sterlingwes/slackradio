@@ -1,65 +1,84 @@
 import { mapStateSubset } from '../store/riotRedux.mixin'
 
-var instance
+var instance = {}
 
-function AudioElement (store) {
-  var audioTag
-  var currentSrc
-  var lastTrackedId
+class AudioElement {
+  constructor (srcType, store) {
+    this.state = {}
+    this.type = srcType
 
-  this.state = {}
+    if (!this.audioTag) {
+      this.audioTag = document.getElementById(srcType + 'AudioEl')
+      this.audioTag.addEventListener('timeupdate', this.onTime.bind(this))
+      this.audioTag.addEventListener('ended', this.onEnd.bind(this))
+      this.audioTag.addEventListener('emptied', this.onReset.bind(this))
+      this.audioTag.addEventListener('error', this.onError.bind(this))
 
-  this.play = function () {
+      mapStateSubset.call(this, {
+        isPlaying: srcType === 'radio' ? 'radio.currentStation.playlist.o.isPlaying' : 'userSongs.o.state.isPlaying',
+        song: srcType === 'radio' ? 'radio.currentStation.playlist.playing' : 'userSongs.playing',
+        focused: 'window.focused'
+      })
+    }
+
+    store.on('restartSong', function () {
+      this.audioTag.currentTime = 0
+    })
+
+    this.store = store
+  }
+
+  play () {
     var src = this.state.song.getFile()
-    if (currentSrc !== src) {
+    if (this.currentSrc !== src) {
       this.setSrc(src)
     }
 
-    audioTag.play()
+    this.audioTag.play()
   }
 
-  this.setSrc = function (src) {
-    currentSrc = audioTag.src = src
+  pause () {
+    this.audioTag.pause()
   }
 
-  this.pause = function () {
-    audioTag.pause()
+  setSrc (src) {
+    this.currentSrc = this.audioTag.src = src
   }
 
-  this.onTime = function () {
-    var pct = audioTag.currentTime / audioTag.duration
+  onTime () {
+    var pct = this.audioTag.currentTime / this.audioTag.duration
     var elapsedPct = Math.ceil(pct * 100)
     var song = this.state.song
-    if (elapsedPct > 75 && song && song.id !== lastTrackedId) {
-      lastTrackedId = this.state.song.id
-      store.trigger('trackPlay', lastTrackedId)
+    if (elapsedPct > 75 && song && song.id !== this.lastTrackedId) {
+      this.lastTrackedId = song.id
+      this.store.trigger('trackPlay', this.lastTrackedId)
     }
     if (this.state.focused) {
-      store.trigger('elapsed', elapsedPct)
+      this.store.trigger('elapsed', elapsedPct)
     }
   }
 
-  this.onError = function (e) {
+  onError (e) {
     console.error('<audio>', e)
   }
 
-  this.onEnd = function () {
-    var state = store.getState()
+  onEnd () {
+    var state = this.store.getState()
     var nextSong = state.userSongs.getNext()
     if (!nextSong || !nextSong.exists) {
       nextSong.fetchSong()
-      return store.trigger('fetchSong', nextSong.id)
+      return this.store.trigger('fetchSong', nextSong.id)
     }
-    store.trigger('nextSong')
+    this.store.trigger('nextSong')
   }
 
-  this.onReset = function () {
-    if (currentSrc !== audioTag.src && this.state.isPlaying) {
+  onReset () {
+    if (this.currentSrc !== this.audioTag.src && this.state.isPlaying) {
       this.play()
     }
   }
 
-  this.handleChange = function () {
+  handleChange () {
     if (this.state.isPlaying) {
       this.play()
     } else {
@@ -67,36 +86,14 @@ function AudioElement (store) {
     }
   }
 
-  this.update = function (state) {
+  update (state) {
     Object.assign(this, state)
     this.handleChange()
   }
-
-  this.init = function () {
-    if (!audioTag) {
-      audioTag = document.getElementById('audioEl')
-      audioTag.addEventListener('timeupdate', this.onTime.bind(this))
-      audioTag.addEventListener('ended', this.onEnd.bind(this))
-      audioTag.addEventListener('emptied', this.onReset.bind(this))
-      audioTag.addEventListener('error', this.onError.bind(this))
-
-      mapStateSubset.call(this, {
-        isPlaying: 'userSongs.o.isPlaying',
-        song: 'userSongs.playing',
-        focused: 'window.focused'
-      })
-    }
-  }
-
-  store.on('restartSong', function () {
-    audioTag.currentTime = 0
-  })
-
-  this.init()
 }
 
-module.exports = function (store) {
-  if (instance) return instance
-  instance = new AudioElement(store)
-  return instance
+module.exports = function (type, store) {
+  if (instance[type]) return instance[type]
+  instance[type] = new AudioElement(type, store)
+  return instance[type]
 }

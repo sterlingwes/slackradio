@@ -20,6 +20,7 @@ module.exports = {
 
   messages: {
     unknown: ['error', 'Something happened. Not sure what. We need better messaging!'],
-    connectionLost: ['warn', 'Unable to connect to SlackRadio, retrying...']
+    connectionLost: ['warn', 'Unable to connect to SlackRadio, retrying...'],
+    stationLoadFail: ['error', 'Failed to retrieve station :(']
   }
 }

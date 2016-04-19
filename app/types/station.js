@@ -1,9 +1,9 @@
 const _ = require('lodash')
 const Playlist = require('./playlist')
 
-function Station (station) {
+function Station (station, playlist) {
   this.o = {}
-  this.playlist = Playlist.fromSongs(station.songs)
+  this.playlist = playlist || Playlist.fromSongs(station.songs)
   delete station.songs
   _.extend(this.o, station)
 }
@@ -16,10 +16,22 @@ Station.prototype.getId = function () {
   return this.o._id
 }
 
+Station.prototype.getCurrentIndex = function () {
+  return this.o.current.index
+}
+
+Station.prototype.play = function () {
+  this.playlist.setSong(this.getCurrentIndex(), true)
+}
+
 Station.prototype.toJSON = function () {
   var station = this.o
   station.songs = this.playlist.toJSON()
   return station
+}
+
+Station.prototype.clone = function () {
+  return new Station(this.o, this.playlist.clone())
 }
 
 Station.map = function (stations) {

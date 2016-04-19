@@ -14,13 +14,33 @@
   <script>
     var makeStyle = require('../utils/makeStyle.js')
     var extendStyle = require('../utils/extendStyle.js')
+    var lastSource
 
     this.mixin('redux')
-    this.use({
-      song: 'userSongs.playing',
-      isPlaying: 'userSongs.o.isPlaying',
-      fetching: 'userSongs.fetching'
-    })
+
+    this.mapState = function (source) {
+      var radioPrefix = 'radio.currentStation.playlist'
+      var libraryPrefix = 'userSongs'
+
+      if (source || (this.state.source && lastSource !== this.state.source)) {
+        lastSource = source || this.state.source
+        var prefix = lastSource === 'radio' ? radioPrefix : libraryPrefix
+
+        if (typeof this._unsubscribe === 'function') {
+          this._unsubscribe()
+          console.info('unsubd')
+        }
+
+        this.use({
+          source: 'app.source',
+          song: prefix + '.playing',
+          fetching: prefix + '.fetching',
+          isPlaying: prefix + '.o.isPlaying'
+        })
+      }
+    }
+    
+    this.mapState('radio')
 
     var albumWidth = 210
     var trackSize = 4
@@ -88,6 +108,8 @@
       if (this.state.song) {
         this.render()
       }
+      
+      this.mapState()
     })
   </script>
 </track-circle>

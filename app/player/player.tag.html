@@ -9,7 +9,7 @@
     </div>
 
     <div class="controls">
-      <div class={ control: 1, play: 1, playing: state.isPlaying } onclick={ play }></div>
+      <div class={ control: 1, play: 1, playing: state.isPlaying || state.isPlayingRadio } onclick={ play }></div>
     </div>
 
     <div class="options">
@@ -74,26 +74,31 @@
   </style>
 
   <script>
-    var audio = require('./audio')
+    var playlistAudio = require('./audio').bind(null, 'playlist')
+    var radioAudio = require('./audio').bind(null, 'radio')
 
     this.mixin('redux')
     this.use({
       songs: 'userSongs.songs',
       song: 'userSongs.playing',
       isPlaying: 'userSongs.o.isPlaying',
+      isPlayingRadio: 'radio.currentStation.playlist.o.isPlaying',
       stations: 'radio.stations',
-      currentStation: 'radio.currentStation',
+      radioSong: 'radio.currentStation.playlist.playing',
       route: 'app.mode'
     })
 
     this.getTitle = function () {
-      if (this.route === 'radio' && this.state.currentStation) {
-        return this.state.currentStation
+      if (this.state.route === 'radio' && this.state.radioSong) {
+        return this.state.radioSong.getTitle()
       }
       return this.state.song.getTitle()
     }
 
     this.getArtist = function () {
+      if (this.state.route === 'radio' && this.state.radioSong) {
+        return this.state.radioSong.getArtist()
+      }
       return this.state.song.getArtist()
     }
 
@@ -136,7 +141,8 @@
     this.start()
 
     this.on('mount', function () {
-      audio(this.store)
+      playlistAudio(this.store)
+      radioAudio(this.store)
     }.bind(this))
 
     this.on('update', function () {})
