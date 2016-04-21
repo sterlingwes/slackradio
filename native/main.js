@@ -8,6 +8,8 @@ const app = electron.app
 // Module to create native browser window.
 const BrowserWindow = electron.BrowserWindow
 
+const keyBinder = require('./keys')
+
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
 let mainWindow
@@ -22,13 +24,13 @@ function createWindow () {
   require('./songs')(electron, mainWindow)
 
   // register shortcut handler
-  require('./keys')(electron, mainWindow)
+  keyBinder.enable(mainWindow)
 
   // and load the index.html of the app.
   mainWindow.loadURL('file://' + rootTemplate)
 
   // handle focus & blur
-  require('./windowState')(electron, mainWindow)
+  require('./windowState')(mainWindow)
 
   // handle slack auth
   require('./slack')(electron)
