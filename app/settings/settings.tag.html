@@ -15,7 +15,7 @@
 
     this.mixin('redux')
     this.use({
-      size: 'app.mediaSize'
+      size: 'media.total'
     })
 
     this.saveJson = function () {
@@ -36,9 +36,10 @@
     this.deleteMedia = function () {
       this.deleting = true
       SlackRadio.deleteMedia(() => {
-        this.store.trigger('syncFilesystem')
         this.deleting = false
-        SlackRadio.getMediaSize()
+        SlackRadio.getMediaSize(() => {
+          this.store.trigger('syncFilesystem')
+        })
       })
     }
 

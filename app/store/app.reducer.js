@@ -4,9 +4,8 @@ const storage = require('./storage')
 const messages = require('../constants').messages
 
 var initialState = {
-  mode: 'playlist',
-  source: 'playlist',
-  mediaSize: 'loading',
+  mode: 'radio',
+  source: 'radio',
   user: storage.read('u', null),
   loadingPlaylists: false,
   connected: false,
@@ -26,11 +25,6 @@ function reducerFn (state = initialState, action) {
 
     case 'set source':
       newState.source = action.source
-      break
-
-    case 'size media':
-      var size = action.size
-      newState.mediaSize = size === '0 B' ? 'empty' : size
       break
 
     case 'slack connected':

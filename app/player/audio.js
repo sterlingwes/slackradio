@@ -10,7 +10,7 @@ function AudioElement (store) {
   this.state = {}
 
   this.play = function () {
-    var src = this.state.song.getFile()
+    var src = this.state.song.getFile(this.state.files)
     if (currentSrc !== src) {
       this.setSrc(src)
     }
@@ -83,7 +83,8 @@ function AudioElement (store) {
       mapStateSubset.call(this, {
         isPlaying: 'userSongs.o.isPlaying',
         song: 'userSongs.playing',
-        focused: 'window.focused'
+        focused: 'window.focused',
+        files: 'media.list'
       })
     }
   }

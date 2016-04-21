@@ -6,6 +6,7 @@ import createLogger from './utils/logger'
 import appReducer from './store/app.reducer'
 import radioReducer from './store/radio.reducer'
 import playlistReducer from './store/playlist.reducer'
+import mediaReducer from './store/media.reducer'
 import statsReducer from './store/stats.reducer'
 import windowReducer from './store/window.reducer'
 
@@ -34,6 +35,7 @@ var RootReducer = combineReducers({
   app: appReducer.fn,
   radio: radioReducer.fn,
   userSongs: playlistReducer.fn,
+  media: mediaReducer.fn,
   stats: statsReducer.fn,
   window: windowReducer.fn
 })
@@ -50,13 +52,18 @@ var Store = ReduxMixin(
   )
 )
 
-window.SlackRadio.registerStore(Store)
-appReducer.init(Store)
-radioReducer.init(Store)
-playlistReducer.init(Store)
-statsReducer.init(Store)
-windowReducer.init(Store)
+window.SlackRadio.init(Store)
 
-riot.mount('player')
-riot.mount('pages')
-riot.mount('flash')
+mediaReducer.init(Store)
+
+window.SlackRadio.getMediaSize(function () {
+  appReducer.init(Store)
+  radioReducer.init(Store)
+  playlistReducer.init(Store)
+  statsReducer.init(Store)
+  windowReducer.init(Store)
+
+  riot.mount('player')
+  riot.mount('pages')
+  riot.mount('flash')
+})

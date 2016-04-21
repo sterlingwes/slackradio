@@ -7,12 +7,14 @@ const actions = require('./playlist.actions')
 
 const playlistKey = 'playlist'
 
-var initialState = Playlist.fromSongs(storage.read(playlistKey))
-
-function reducerFn (state = initialState, action) {
-  var playlist = state.clone()
+function reducerFn (state = {}, action) {
+  var playlist = 'clone' in state ? state.clone() : {}
 
   switch (action.type) {
+    case 'load user playlist':
+      playlist = Playlist.fromSongs(storage.read(playlistKey))
+      break
+
     case 'choose song':
       playlist.setPlaying(action.index, false)
       break
@@ -108,10 +110,14 @@ function reducerFn (state = initialState, action) {
 function init (store) {
   mapActions(actions, store)
 
+  store.dispatch({ type: 'load user playlist' })
+
   SlackRadio.ipc.on('fetchedSong', function (e, song) {
     var updatedSong = new Song(song)
     store.trigger('fetchedSong', updatedSong)
-    SlackRadio.getMediaSize()
+    SlackRadio.getMediaSize(function () {
+      store.trigger('syncFilesystem')
+    })
   })
 
   SlackRadio.ipc.on('acquiredSong', function (e, song) {

@@ -62,8 +62,7 @@
           this.store.trigger('setSource', 'radio')
           if (station && station.length) {
             this.store.trigger('changePlaylist', station[0])
-            this.store.trigger('syncFilesystem') // async, could race :/ TODO: need to show progress
-            this.store.trigger('startRadio')
+            this.store.trigger('startRadio', station[0].current.index)
           }
         })
     }

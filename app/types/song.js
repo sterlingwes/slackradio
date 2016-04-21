@@ -89,7 +89,14 @@ Song.prototype.getTitle = function () {
   return this.title
 }
 
-Song.prototype.getFile = function () {
+Song.prototype.getId = function () {
+  return 'yt-' + this.id
+}
+
+Song.prototype.getFile = function (list) {
+  if (list && list[this.getId()]) {
+    return '../media/' + list[this.getId()].filename
+  }
   return '../media/' + this.filename
 }
 
@@ -114,11 +121,8 @@ Song.prototype.setElapsed = function (pct) {
 }
 
 Song.prototype.checkExists = function () {
-  var result
-  try {
-    result = SlackRadio.fs.statSync('media/' + this.filename)
-  } catch (e) { this.exists = false }
-  if (result) this.exists = true
+  var media = SlackRadio.getState('media').list['yt-' + this.id]
+  this.exists = !!media
 }
 
 Song.prototype.getUrl = function () {
