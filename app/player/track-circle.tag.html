@@ -6,7 +6,7 @@
   </div>
   <div class="cover" style={ coverStyle }>
     <div class="coverimg" style={ imgStyle }></div>
-    <div class="coverloading" style={ loaderStyle } if={ !state.song.exists }>
+    <div class="coverloading" style={ loaderStyle } if={ !state.notLoading }>
       <loading-circles style={ loaderSpinnerStyle }></loading-circles>
     </div>
   </div>
@@ -19,7 +19,7 @@
     this.use({
       song: 'userSongs.playing',
       isPlaying: 'userSongs.o.isPlaying',
-      fetching: 'userSongs.fetching'
+      notLoading: 'userSongs.playing.exists'
     })
 
     var albumWidth = 210
