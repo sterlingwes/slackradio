@@ -34,7 +34,9 @@ function reducerFn (state = {}, action) {
       break
 
     case 'song progress':
-      playlist.playing.setElapsed(action.percent)
+      if (playlist.playing) {
+        playlist.playing.setElapsed(action.percent)
+      }
       break
 
     case 'adding song':

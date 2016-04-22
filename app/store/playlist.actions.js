@@ -1,8 +1,10 @@
 module.exports = {
 
-  queueSong: {
-    type: 'choose song',
-    index: 0
+  queueSong: function (index) {
+    return {
+      type: 'choose song',
+      index: index
+    }
   },
 
   nextSong: { type: 'next song' },
@@ -53,6 +55,8 @@ module.exports = {
 
   augmentPlaylist: function (playlist) {
     return { type: 'augment playlist', playlist: playlist }
-  }
+  },
+
+  loadUserPlaylist: { type: 'load user playlist' }
 
 }

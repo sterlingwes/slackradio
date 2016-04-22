@@ -121,12 +121,13 @@
     }
 
     this.start = function (index) {
-      var firstSong = this.state.songs[index || 0]
+      var idx = index || 0
+      var firstSong = this.state.songs[idx]
       if (!firstSong.exists) {
         firstSong.fetchSong()
         return this.store.trigger('fetchSong', firstSong.id)
       }
-      this.store.trigger('queueSong')
+      this.store.trigger('queueSong', idx)
     }
 
     this.store.on('startRadio', (index) => {

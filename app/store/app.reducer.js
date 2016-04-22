@@ -5,7 +5,7 @@ const messages = require('../constants').messages
 
 var initialState = {
   mode: 'radio',
-  source: 'radio',
+  source: 'playlist',
   user: storage.read('u', null),
   loadingPlaylists: false,
   connected: false,

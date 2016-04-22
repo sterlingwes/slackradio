@@ -12,6 +12,7 @@ import windowReducer from './store/window.reducer'
 
 import './fonts/fonts.scss'
 import './fonts/icons.scss'
+import './layout/style.scss'
 import './player/player.scss'
 
 import './layout/pages.tag.html'

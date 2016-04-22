@@ -1,0 +1,19 @@
+.action-btn {
+  display: inline-block;
+  padding: 10px 20px;
+  background-color: #333;
+  border-radius: 3px;
+  font-family: 'LatoWeb';
+  cursor: pointer;
+  margin-top: 5px;
+}
+
+.action-btn--danger {
+  background-color: #6B0000
+}
+
+.action-btn--disabled {
+  font-style: italic;
+  color: #555;
+  background-color: #222
+}
