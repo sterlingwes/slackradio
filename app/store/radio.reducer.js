@@ -10,7 +10,7 @@ function groupPlaylists (state, lists) {
     team.push(station)
     return hash
   }, state)
-  state._length = Object.keys(state).length
+  state._length = _.without(Object.keys(state), '_length').length
   return state
 }
 

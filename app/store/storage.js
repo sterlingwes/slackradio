@@ -4,7 +4,7 @@ const keys = ['playlist', 'playCounts']
 
 module.exports = {
   read: function (key, defaultVal) {
-    defaultVal = defaultVal || []
+    defaultVal = typeof defaultVal === 'undefined' ? [] : defaultVal
     return JSON.parse(localStorage.getItem(key)) || defaultVal
   },
 

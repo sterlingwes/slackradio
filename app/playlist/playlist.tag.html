@@ -34,6 +34,15 @@
     </div>
   </div>
 
+  <div class="radioOverlay transparent" if={ !state.songs.length }>
+    <p>
+      Your playlist is empty.
+    </p>
+    <p class="light">
+      Try adding a YouTube link, below.
+    </p>
+  </div>
+
   <style>
     playlist {
       display: inline-block;
@@ -52,12 +61,21 @@
     .radioOverlay {
       background-color: rgba(0,0,0,0.8);
       text-align: center;
+      bottom: 40px
     }
 
     .radioOverlay p {
       font-family: 'LatoWeb';
       font-size: 1.5em;
       margin-top: 100px
+    }
+
+    .radioOverlay p.light {
+      font-family: 'LatoWebLight';
+    }
+
+    .transparent {
+      background-color: transparent
     }
     
     playlist .tracklist {

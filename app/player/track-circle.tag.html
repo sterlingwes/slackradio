@@ -1,15 +1,34 @@
 <track-circle>
   <pie class="track" style={ pieStyle } fill="lightblue"></pie>
+
   <div class="album" style={ albumStyle }>
     <div class="space" style={ spaceStyle }></div>
     <div class="cutout"></div>
   </div>
+
   <div class="cover" style={ coverStyle }>
     <div class="coverimg" style={ imgStyle }></div>
-    <div class="coverloading" style={ loaderStyle } if={ !state.notLoading }>
+    <div class="coverloading" style={ loaderStyle } if={ state.song && !state.notLoading }>
       <loading-circles style={ loaderSpinnerStyle }></loading-circles>
     </div>
   </div>
+
+  <div class="srtext" if={ !state.song }>
+    SlackRadio
+  </div>
+
+  <style>
+    track-circle .srtext {
+      font-family: 'LatoWebLight';
+      text-align: center;
+      position: absolute;
+      top: 90px;
+      left: 0;
+      right: 0;
+      font-size: 1.6em;
+      color: #8CA3AB;
+    }
+  </style>
 
   <script>
     var makeStyle = require('../utils/makeStyle.js')
@@ -60,11 +79,18 @@
         height: coverWidth + 'px'
       })
 
-      this.imgStyle = makeStyle({
+      var imgStyle = {
         width: coverWidth + 'px',
-        height: coverWidth + 'px',
-        'background-image': 'url(' + this.state.song.getThumb() + ')'
-      })
+        height: coverWidth + 'px'
+      }
+
+      if (this.state.song) {
+        imgStyle['background-image'] = 'url(' + this.state.song.getThumb() + ')'
+      } else {
+        imgStyle.background = '#191919'
+      }
+
+      this.imgStyle = makeStyle(imgStyle)
       
       this.loaderStyle = makeStyle({
         width: coverWidth + 'px',
@@ -85,9 +111,7 @@
     }
     
     this.on('update', function () {
-      if (this.state.song) {
-        this.render()
-      }
+      this.render()
     })
   </script>
 </track-circle>

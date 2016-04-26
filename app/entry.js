@@ -57,14 +57,26 @@ window.SlackRadio.init(Store)
 
 mediaReducer.init(Store)
 
-window.SlackRadio.getMediaSize(function () {
-  appReducer.init(Store)
-  radioReducer.init(Store)
-  playlistReducer.init(Store)
-  statsReducer.init(Store)
-  windowReducer.init(Store)
+window.SlackRadio.api.authenticate()
+  .then(res => {
+    mountApp()
+  })
+  .catch(res => {
+    console.warn('Auth failed!', res)
+    window.localStorage.removeItem('u')
+    mountApp()
+  })
 
-  riot.mount('player')
-  riot.mount('pages')
-  riot.mount('flash')
-})
+function mountApp () {
+  window.SlackRadio.getMediaSize(function () {
+    appReducer.init(Store)
+    radioReducer.init(Store)
+    playlistReducer.init(Store)
+    statsReducer.init(Store)
+    windowReducer.init(Store)
+
+    riot.mount('player')
+    riot.mount('pages')
+    riot.mount('flash')
+  })
+}

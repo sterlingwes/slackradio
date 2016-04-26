@@ -28,10 +28,6 @@ module.exports = function () {
     .configure(feathers.socketio(socket))
     .configure(feathers.authentication({ storage: window.localStorage }))
 
-  // app.authenticate().then(function () {
-  //   console.log('auth', arguments)
-  // })
-
   socket.on('connect', function () {
     SlackRadio.setNetworkState(true)
   })
@@ -62,15 +58,24 @@ module.exports = function () {
   })
 
   var slackService = app.service('slack')
-
-  slackService.on('slackConnected', (data) => {
-    console.log(data)
-  })
-
   var hookService = app.service('slackhook')
   var playlistService = app.service('playlists')
 
+  function authenticate () {
+    var creds = window.localStorage.getItem('u')
+    try {
+      creds = JSON.parse(creds)
+    } catch (e) { return Promise.reject(e) }
+
+    return app.authenticate({
+      type: 'local',
+      email: creds.user_id,
+      password: creds.access_token
+    })
+  }
+
   return {
+    authenticate: authenticate,
     playlists: playlistService,
     slack: slackService,
     hook: hookService

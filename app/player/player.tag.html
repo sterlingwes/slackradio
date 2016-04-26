@@ -1,6 +1,6 @@
 <player>
   
-  <div if={ state.song }>
+  <div>
     <track-circle></track-circle>
 
     <div class="trackdetails">
@@ -8,7 +8,7 @@
       <div class="trackartist">{ getArtist() }</div>
     </div>
 
-    <div class="controls">
+    <div class="controls" if={ state.song }>
       <div class={ control: 1, play: 1, playing: state.isPlaying } onclick={ play }></div>
     </div>
 
@@ -59,7 +59,7 @@
     }
     
     .trackdetails {
-      margin: 25px 20px;
+      margin: 40px 20px;
       margin-bottom: 10px;
       text-align: center
     }
@@ -123,7 +123,7 @@
     this.start = function (index) {
       var idx = index || 0
       var firstSong = this.state.songs[idx]
-      if (!firstSong.exists) {
+      if (firstSong && !firstSong.exists) {
         firstSong.fetchSong()
         return this.store.trigger('fetchSong', firstSong.id)
       }
