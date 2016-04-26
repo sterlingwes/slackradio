@@ -7,7 +7,7 @@
 
     <panel-section if={ !parent.state.user } header="Permissions">
       <p>We ask for access to your list of channels to check if a radio station has already been setup by someone on your team.</p>
-      <p>If no radio station has been setup, we'll ask you to provide additional permissions to allow us to read the history for the channel you want to link to SlackRadio. When we read the channel history, we only save the links users have posted to that channel that can be streamed as audio on your station.</p>
+      <p>We also ask for access to a list of your Slack teammates in order to show you who's playing what on your station.</p>
     </panel-section>
 
     <panel-section if={ parent.state.user && !parent.state.stations._length } header="No Active Channels" button="Try Again" action="loadPlaylists" disable={ parent.loadingPlaylists }>

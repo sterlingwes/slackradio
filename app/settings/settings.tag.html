@@ -1,12 +1,20 @@
 <settings>
   <panel header="Settings">
-    <panel-section header="Your Data" button="Download" action="saveJson">
+    <panel-section header="Save Playlist" button="Download" action="saveJson">
       <p>You can save your playlist & other settings to a file you can import into other SlackRadio apps.</p>
     </panel-section>
 
-    <panel-section header="Media Cache" danger-button="Delete All Media" action="deleteMedia" disable={ parent.deleting }>
+    <panel-section header="Media Cache" button="Delete All Media" action="deleteMedia" disable={ parent.deleting }>
       <p>SlackRadio streams audio data to your hard disk. It's a good idea to clear this cache occasionally if you find it taking up too much space.</p>
       <p>Your media cache is currently { parent.parent.state.size }.</p>
+    </panel-section>
+
+    <panel-section header="Import Playlist" danger-button="Load Playlist" action="loadJson">
+      <p>Load a previously exported playlist here. It will overwrite your existing playlist!</p>
+    </panel-section>
+
+    <panel-section header="Delete Everything" danger-button="Reset" action="clearData">
+      <p>If you like a clean slate from time to time, this button is for you.</p>
     </panel-section>
   </panel>
 
@@ -31,6 +39,30 @@
           if(err) console.error(err);
         })
       })
+    }
+
+    this.loadJson = function () {
+      var options = {
+        title: 'Import SlackRadio Playlist',
+        defaultPath: '~/',
+        filters: [
+          { name: 'JSON Files', extensions: ['json'] }
+        ]
+      }
+      SlackRadio.dialog.showOpenDialog(options, (filenames) => {
+        if (!filenames || !filenames[0]) return
+        SlackRadio.fs.readFile(filenames[0], 'utf8', (err, file) => {
+          if (err) return console.warn(err)
+          storage.fromJSON(file)
+          this.store.trigger('loadUserPlaylist')
+          this.store.trigger('routeChange', 'playlist')
+        })
+      })
+    }
+
+    this.clearData = function () {
+      window.localStorage.clear()
+      window.location.reload(0)
     }
     
     this.deleteMedia = function () {

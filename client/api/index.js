@@ -63,9 +63,13 @@ module.exports = function () {
 
   function authenticate () {
     var creds = window.localStorage.getItem('u')
+    var err
+
     try {
       creds = JSON.parse(creds)
-    } catch (e) { return Promise.reject(e) }
+    } catch (e) { err = e }
+
+    if (!creds || err) return Promise.reject(err || 'No credentials')
 
     return app.authenticate({
       type: 'local',

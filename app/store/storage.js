@@ -19,5 +19,20 @@ module.exports = {
       return hash
     }, {})
     return JSON.stringify(json)
+  },
+
+  fromJSON: function (jsonStr) {
+    var json
+    try {
+      json = JSON.parse(jsonStr)
+    } catch (e) {
+      console.error('Unable to parse file', e)
+    }
+
+    if (!json) return false
+
+    keys.forEach(key => {
+      localStorage.setItem(key, JSON.stringify(json[key]))
+    })
   }
 }
