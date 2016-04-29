@@ -59,6 +59,7 @@ mediaReducer.init(Store)
 
 window.SlackRadio.api.authenticate()
   .then(res => {
+    console.info('Authenticated', res)
     mountApp()
   })
   .catch(res => {

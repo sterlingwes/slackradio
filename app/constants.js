@@ -10,11 +10,13 @@ module.exports = {
       'Official Audio',
       'Lyric Video',
       'Music Video',
+      'HQ Audio',
       'Lyrics',
       'Lyric',
       'Audio',
       'Official',
-      'Original'
+      'Original',
+      'HD'
     ]
   },
 

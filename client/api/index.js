@@ -37,16 +37,13 @@ module.exports = function () {
     console.error('Socket Error', e)
   })
 
-  socket.on('reconnect', function (e) {
-    console.warn(e)
-  })
-
   // socket.on('reconnecting', function (e) {
   //   SlackRadio.setNetworkState(false)
   // })
 
   socket.on('reconnect', function (e) {
     SlackRadio.hideMessage('connectionLost')
+    authenticate()
   })
 
   socket.on('reconnect_error', function (e) {
