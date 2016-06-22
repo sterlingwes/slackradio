@@ -11,6 +11,31 @@ var stub = {
   slack: stubService
 }
 
+/*
+  * attempt to authenticate against the API
+  * we try to use stored credentials from localStorage
+  *
+  * returns a promise
+  */
+function authenticate (app) {
+  return function () {
+    var creds = window.localStorage.getItem('u')
+    var err
+
+    try {
+      creds = JSON.parse(creds)
+    } catch (e) { err = e }
+
+    if (!creds || err) return Promise.reject(err || 'No credentials')
+
+    return app.authenticate({
+      type: 'local',
+      email: creds.user_id,
+      password: creds.access_token
+    })
+  }
+}
+
 module.exports = function () {
   if (typeof io === 'undefined') {
     //
@@ -54,31 +79,10 @@ module.exports = function () {
     SlackRadio.setNetworkState(false)
   })
 
-  var slackService = app.service('slack')
-  var hookService = app.service('slackhook')
-  var playlistService = app.service('playlists')
-
-  function authenticate () {
-    var creds = window.localStorage.getItem('u')
-    var err
-
-    try {
-      creds = JSON.parse(creds)
-    } catch (e) { err = e }
-
-    if (!creds || err) return Promise.reject(err || 'No credentials')
-
-    return app.authenticate({
-      type: 'local',
-      email: creds.user_id,
-      password: creds.access_token
-    })
-  }
-
   return {
-    authenticate: authenticate,
-    playlists: playlistService,
-    slack: slackService,
-    hook: hookService
+    authenticate: authenticate(app),
+    playlists: app.service('playlists'),
+    slack: app.service('slack'),
+    hook: app.service('slackhook')
   }
 }

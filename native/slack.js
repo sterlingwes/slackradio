@@ -4,6 +4,11 @@ const scope = 'channels:read users:read'
 
 module.exports = function (electron) {
   var ipc = electron.ipcMain
+
+  /*
+   * pop open an SSO dialog for Slack creds and grab the
+   * auth code to pass on to our API
+   */
   ipc.on('connectSlack', function (ipcEvent) {
     var BrowserWindow = electron.BrowserWindow
     var authWindow = new BrowserWindow({
@@ -31,7 +36,7 @@ module.exports = function (electron) {
         }
 
         var code = matchCode[1].split('&')
-        ipcEvent.sender.send('slackConnected', code[0])
+        ipcEvent.sender.send('slackConnected', code[0]) // /client/ipc
       }
     })
 

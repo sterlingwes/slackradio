@@ -68,6 +68,11 @@
         })
     }
 
+    /*
+     * connect a slack account (authenticate)
+     *
+     * see /native/slack
+     */
     this.connectSlack = function () {
       this.connecting = true
       SlackRadio.ipc.send('connectSlack')

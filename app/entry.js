@@ -53,10 +53,21 @@ var Store = ReduxMixin(
   )
 )
 
+/*
+ * initialize our bridge between the app script bundle and the native
+ * app (global SlackRadio var)
+ *
+ * see /client/bridge
+ */
 window.SlackRadio.init(Store)
 
 mediaReducer.init(Store)
 
+/*
+ * attempt to authenticate with the API, in either case mount the app
+ *
+ * on failure, remove any prior session token
+ */
 window.SlackRadio.api.authenticate()
   .then(res => {
     console.info('Authenticated', res)
@@ -68,6 +79,10 @@ window.SlackRadio.api.authenticate()
     mountApp()
   })
 
+/*
+ * prior to mount we try to get a handle of the user's media cache & its size
+ * then, we initialize the reducers that care about that
+ */
 function mountApp () {
   window.SlackRadio.getMediaSize(function () {
     appReducer.init(Store)

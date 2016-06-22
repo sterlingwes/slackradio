@@ -4,6 +4,7 @@ const HtmlWebpackPlugin = require('html-webpack-plugin')
 const CleanPlugin = require('clean-webpack-plugin')
 
 const HOST = 'http://localhost:3030'
+// const HOST = 'http://swj.io'
 
 var config = {}
 
