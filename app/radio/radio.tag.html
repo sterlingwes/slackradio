@@ -1,38 +1,115 @@
 <radio>
-  <panel header="Radio Stations" if={ !state.stations.length }>
-    <panel-section if={ !state.user } header="Add a Station" button="Connect Slack" action="connectSlack" disable={ parent.connecting }>
+  <panel header="Radio Stations" if={ !state.stations._length }>
+    <panel-section if={ !parent.state.user } header="Add a Station" button="Connect Slack" action="connectSlack" disable={ parent.connecting }>
       <p>SlackRadio stations are powered by links posted to Slack channels.</p>
       <p>Connect your Slack account to SlackRadio in order to find your team's stations.</p>
     </panel-section>
 
-    <panel-section if={ !state.user } header="Permissions">
+    <panel-section if={ !parent.state.user } header="Permissions">
       <p>We ask for access to your list of channels to check if a radio station has already been setup by someone on your team.</p>
-      <p>If no radio station has been setup, we'll ask you to provide additional permissions to allow us to read the history for the channel you want to link to SlackRadio. When we read the channel history, we only save the links users have posted to that channel that can be streamed as audio on your station.</p>
+      <p>We also ask for access to a list of your Slack teammates in order to show you who's playing what on your station.</p>
     </panel-section>
 
-    <panel-section if={ state.user } header="Choose a Channel">
-      <p>Choose a channel from the list below to import your existing playlist.</p>
+    <panel-section if={ parent.state.user && !parent.state.stations._length } header="No Active Channels" button="Connect Another Slack" action="connectSlack" disable={ parent.connecting }>
+      <p>We haven't received any songs for your Slack Org's channels. Once songs have been added to the channels you've configured to point to SlackRadio, you'll see radio stations for those channels here.</p>
     </panel-section>
   </panel>
 
+  <div class="station-list" if={ state.stations._length }>
+    <div class="team" each={ team in getTeams() }>
+      <div class="team-name">{ team }</div>
+      <div class="channel" each={ channel in state.stations[team] } onclick={ setStation }>
+        #{ channel.channel_name }
+      </div>
+    </div>
+  </div>
+  
+  <style>
+    .station-list .team-name {
+      background-color: #222;
+      padding: 10px
+    }
+    
+    .station-list .channel {
+      padding: 10px;
+      font-family: 'LatoWebLight';
+      font-size: 0.9em;
+      cursor: pointer;
+      border-bottom: 1px solid #222
+    }
+  </style>
+
   <script>
     var storage = require('../store/storage')
+
     this.mixin('redux')
     this.use({
-      stations: 'radio.stations',
+      stations: 'radio',
       user: 'app.user'
     })
 
     this.connecting = false
 
+    this.getTeams = function () {
+      return Object.keys(this.state.stations).filter(team => { return team !== '_length' })
+    }
+
+    this.setStation = function (e) {
+      var stationId = e.item.channel._id
+      SlackRadio.api.playlists.get(stationId)
+        .then(station => {
+          // replace user playlist with radio station here
+          // if (!station || !station.length) return SlackRadio.showMessage('stationLoadFail')
+        })
+    }
+
+    /*
+     * connect a slack account (authenticate)
+     *
+     * see /native/slack
+     */
     this.connectSlack = function () {
       this.connecting = true
       SlackRadio.ipc.send('connectSlack')
     }
 
+    this.loadPlaylists = function () {
+      if (this.state.user && SlackRadio.api.playlists) {
+        this.store.trigger('loadingPlaylists')
+        SlackRadio.api.playlists.find({ query: { team_id: this.state.team_id } })
+          .then(playlists => {
+            console.log('received playlists', playlists)
+            this.store.trigger('loadingPlaylists', false)
+            this.store.trigger('receivedPlaylists', playlists)
+            this.update()
+          })
+      }
+    }
+
+    this.on('mount', () => {
+      this.loadPlaylists()
+    })
+
+    SlackRadio.api.hook.on('songAdded', (station) => {
+      // if (this.state.source === 'radio' && station && station.length) {
+      //   this.store.trigger('augmentPlaylist', station[0])
+      // }
+    })
+
+    SlackRadio.api.hook.on('playlistAdded', (stations) => {
+      // if (this.state.source === 'radio' && stations && stations.length) {
+      //   this.store.trigger('playlistsAdded', stations)
+      // }
+    })
+
     SlackRadio.api.slack.on('created', (user) => {
       this.connecting = false
       this.store.trigger('slackConnected', user)
+      this.update()
+    })
+
+    SlackRadio.ipc.on('slackAuthClosed', () => {
+      this.connecting = false
     })
   </script>
 </radio>

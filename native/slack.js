@@ -41,6 +41,7 @@ module.exports = function (electron) {
     })
 
     authWindow.on('closed', function () {
+      ipcEvent.sender.send('slackAuthClosed')
       authWindow = null
     })
   })

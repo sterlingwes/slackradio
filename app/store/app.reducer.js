@@ -5,7 +5,7 @@ const storage = require('./storage')
 var initialState = {
   mode: 'playlist',
   mediaSize: 'loading',
-  user: null
+  user: storage.read('u', null)
 }
 
 function reducerFn (state = initialState, action) {
