@@ -11,6 +11,31 @@ var stub = {
   slack: stubService
 }
 
+/*
+  * attempt to authenticate against the API
+  * we try to use stored credentials from localStorage
+  *
+  * returns a promise
+  */
+function authenticate (app) {
+  return function () {
+    var creds = window.localStorage.getItem('u')
+    var err
+
+    try {
+      creds = JSON.parse(creds)
+    } catch (e) { err = e }
+
+    if (!creds || err) return Promise.reject(err || 'No credentials')
+
+    return app.authenticate({
+      type: 'local',
+      email: creds.user_id,
+      password: creds.access_token
+    })
+  }
+}
+
 module.exports = function () {
   if (typeof io === 'undefined') {
     //
@@ -28,20 +53,36 @@ module.exports = function () {
     .configure(feathers.socketio(socket))
     .configure(feathers.authentication({ storage: window.localStorage }))
 
-  // app.authenticate().then(function () {
-  //   console.log('auth', arguments)
-  // })
-
-  var slackService = app.service('slack')
-
-  slackService.on('slackConnected', (data) => {
-    console.log(data)
+  socket.on('connect', function () {
+    SlackRadio.setNetworkState(true)
   })
 
-  var hookService = app.service('slackhook')
+  socket.on('error', function (e) {
+    SlackRadio.setNetworkState(false)
+    console.error('Socket Error', e)
+  })
+
+  // socket.on('reconnecting', function (e) {
+  //   SlackRadio.setNetworkState(false)
+  // })
+
+  socket.on('reconnect', function (e) {
+    SlackRadio.hideMessage('connectionLost')
+    authenticate()
+  })
+
+  socket.on('reconnect_error', function (e) {
+    SlackRadio.showMessage('connectionLost')
+  })
+
+  socket.on('disconnect', function (e) {
+    SlackRadio.setNetworkState(false)
+  })
 
   return {
-    slack: slackService,
-    hook: hookService
+    authenticate: authenticate(app),
+    playlists: app.service('playlists'),
+    slack: app.service('slack'),
+    hook: app.service('slackhook')
   }
 }

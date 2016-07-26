@@ -9,6 +9,10 @@ ipcRenderer.on('globalShortcut', function (e, action) {
   }
 })
 
+/*
+ * when we've received an auth code from slack, pass it to our
+ * API and "create" an account
+ */
 ipcRenderer.on('slackConnected', function (e, code) {
   console.log('received code', code)
   SlackRadio.api.slack.create({ code: code })

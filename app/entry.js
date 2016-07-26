@@ -6,16 +6,19 @@ import createLogger from './utils/logger'
 import appReducer from './store/app.reducer'
 import radioReducer from './store/radio.reducer'
 import playlistReducer from './store/playlist.reducer'
+// import mediaReducer from './store/media.reducer'
 import statsReducer from './store/stats.reducer'
 import windowReducer from './store/window.reducer'
 
 import './fonts/fonts.scss'
 import './fonts/icons.scss'
+// import './layout/style.scss'
 import './player/player.scss'
 
 import './layout/pages.tag.html'
 import './layout/panel.tag.html'
 import './layout/panelSection.tag.html'
+// import './layout/flash.tag.html'
 
 import './player/player.tag.html'
 import './player/track-circle.tag.html'
@@ -33,6 +36,7 @@ var RootReducer = combineReducers({
   app: appReducer.fn,
   radio: radioReducer.fn,
   userSongs: playlistReducer.fn,
+  // media: mediaReducer.fn,
   stats: statsReducer.fn,
   window: windowReducer.fn
 })
@@ -49,12 +53,46 @@ var Store = ReduxMixin(
   )
 )
 
-window.SlackRadio.registerStore(Store)
-appReducer.init(Store)
-radioReducer.init(Store)
-playlistReducer.init(Store)
-statsReducer.init(Store)
-windowReducer.init(Store)
+/*
+ * initialize our bridge between the app script bundle and the native
+ * app (global SlackRadio var)
+ *
+ * see /client/bridge
+ */
+window.SlackRadio.init(Store)
 
-riot.mount('player')
-riot.mount('pages')
+// mediaReducer.init(Store)
+
+/*
+ * attempt to authenticate with the API, in either case mount the app
+ *
+ * on failure, remove any prior session token
+ */
+window.SlackRadio.api.authenticate()
+  .then(res => {
+    console.info('Authenticated', res)
+    mountApp()
+  })
+  .catch(res => {
+    console.warn('Auth failed!', res)
+    window.localStorage.removeItem('u')
+    mountApp()
+  })
+
+/*
+ * prior to mount we try to get a handle of the user's media cache & its size
+ * then, we initialize the reducers that care about that
+ */
+function mountApp () {
+  window.SlackRadio.getMediaSize(function () {
+    appReducer.init(Store)
+    radioReducer.init(Store)
+    playlistReducer.init(Store)
+    statsReducer.init(Store)
+    windowReducer.init(Store)
+
+    riot.mount('player')
+    riot.mount('pages')
+    riot.mount('flash')
+  })
+}

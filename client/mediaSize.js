@@ -15,14 +15,18 @@ module.exports = function (store, cb) {
     if (err) return cb(err)
     asnc.map(files, getSize, function (err, stats) {
       if (err) return cb(err)
-      var size = stats.reduce(function (total, stat) {
-        total += stat.size
-        return total
-      }, 0)
+      var size = 0
+      var fileMap = stats.reduce(function (hash, file, i) {
+        var id = files[i].split('.').shift()
+        hash[id] = { size: file.size, filename: files[i] }
+        size += file.size
+        return hash
+      }, {})
 
       var fileSize = filesize(size)
-      store.trigger('sizeMedia', fileSize)
-      cb(null, fileSize)
+      var result = { total: fileSize, list: fileMap }
+      store.trigger('sizedMedia', result)
+      cb(null, result)
     })
   })
 }
