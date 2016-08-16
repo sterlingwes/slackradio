@@ -1,7 +1,7 @@
 /* globals describe, it */
 
 const expect = require('expect.js')
-const Song = require('../app/types/song')
+const Song = require('../components/types/song')
 
 const fixture = require('./fixtures/playlist')
 const expectedNames = require('./fixtures/scrubbedNames')

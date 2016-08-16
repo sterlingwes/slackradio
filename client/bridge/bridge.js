@@ -1,9 +1,9 @@
 var electron = require('electron')
 
 var sr = window.SlackRadio = global.SlackRadio = {
-  api: require('../client/api')(),
-  add: require('../client/addSong'),
-  ipc: require('../client/ipc'),
+  api: require('../bridge/api')(),
+  add: require('../bridge/addSong'),
+  ipc: require('../bridge/ipc'),
 
   next: function () {
     var state = sr._store.getState()
@@ -82,11 +82,11 @@ var sr = window.SlackRadio = global.SlackRadio = {
   },
 
   getMediaSize: function (cb) {
-    return require('../client/mediaSize')(sr._store, cb)
+    return require('../bridge/mediaSize')(sr._store, cb)
   },
 
   deleteMedia: function (cb) {
-    return require('../client/mediaDelete')(sr._store, cb)
+    return require('../bridge/mediaDelete')(sr._store, cb)
   },
 
   fs: require('fs'),

@@ -1,7 +1,3 @@
 /node_modules
 /bin
-/build
-/media
-/tests
 /backups
-/slack.json
