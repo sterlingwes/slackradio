@@ -5,6 +5,7 @@
   "main": "index.js",
   "scripts": {
     "client": "cd client && concurrently --names 'bld,app' --prefix '{name}' 'npm run watch' 'npm start'",
+    "server": "cd server && npm start",
     "dev": "npm run client",
     "test": "cd client && npm test"
   },

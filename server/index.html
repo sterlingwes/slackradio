@@ -1,0 +1,32 @@
+<html>
+  <head>
+    <script src="../client/bridge/primus.js"></script>
+  </head>
+  <body>
+    <h1>Test of primus client</h1>
+
+    <script>
+      var primus = Primus.connect('http://localhost:8080')
+
+      primus.on('open', function open() {
+        console.log('Connection is alive and kicking');
+      })
+
+      primus.on('data', function message(data) {
+        console.log('Received a new message from the server', data);
+      })
+
+      primus.on('error', function error(err) {
+        console.error('Something horrible has happened', err.stack);
+      })
+
+      primus.on('reconnect', function (opts) {
+        console.log('Reconnection attempt started');
+      })
+
+      primus.on('end', function () {
+        console.log('Connection closed');
+      })
+    </script>
+  </body>
+</html>

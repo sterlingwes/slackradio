@@ -5,3 +5,4 @@
 /tests
 /backups
 /slack.json
+/bridge/primus.js
