@@ -1,7 +1,7 @@
-const Server = require('./index').Server
+const server = require('./index').server
 const fs = require('fs')
 
-const library = Server.library()
+const library = server.library()
 
 fs.writeFileSync('client/bridge/primus.js', library)
 

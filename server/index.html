@@ -6,27 +6,49 @@
     <h1>Test of primus client</h1>
 
     <script>
-      var primus = Primus.connect('http://localhost:8080')
+      var HOST = 'http://localhost:8080'
 
-      primus.on('open', function open() {
-        console.log('Connection is alive and kicking');
+      var data = JSON.stringify({
+        username: 'foo',
+        password: 'bar'
       })
 
-      primus.on('data', function message(data) {
-        console.log('Received a new message from the server', data);
-      })
+      var headers = new Headers()
+      headers.set('Content-Type', 'application/json')
 
-      primus.on('error', function error(err) {
-        console.error('Something horrible has happened', err.stack);
-      })
+      fetch(HOST + '/login', { method: 'POST', body: data, headers: headers })
+        .then(function (res) {
+          res.json().then(function (json) {
+            if (!json.token) return console.warn('no token', json)
+            connect(json.token)
+          })
+        })
 
-      primus.on('reconnect', function (opts) {
-        console.log('Reconnection attempt started');
-      })
+      function connect (token) {
+        var primus = Primus.connect(HOST + '?token=' + token)
 
-      primus.on('end', function () {
-        console.log('Connection closed');
-      })
+        primus.on('open', function open() {
+          console.log('Connection is alive and kicking');
+        })
+
+        primus.on('data', function message(data) {
+          console.log('Received a new message from the server', data);
+        })
+
+        primus.on('error', function error(err) {
+          console.error('Something horrible has happened', err.stack);
+        })
+
+        primus.on('reconnect', function (opts) {
+          console.log('Reconnection attempt started');
+        })
+
+        primus.on('end', function () {
+          console.log('Connection closed');
+        })
+
+        primus.write('FUCK')
+      }
     </script>
   </body>
 </html>
