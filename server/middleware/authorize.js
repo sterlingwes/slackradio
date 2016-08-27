@@ -47,14 +47,16 @@ module.exports = function authorize (req, authorized) {
   // Check if the user is still present and allowed in our db. You could tweak
   // this to invalidate a token.
   //
-  const user = db.getUser(payload.iss)
-  if (!user || user.deauthorized) {
-    error = new Error('Invalid access token')
-    console.error(error.message)
-    return authorized(error)
-  }
+  db.users.getUser(payload.iss, (err, user) => {
+    if (err) return authorized(err)
+    if (!user || user.deauthorized) {
+      error = new Error('Invalid access token')
+      console.error(error.message)
+      return authorized(error)
+    }
 
-  authorized()
+    authorized()
+  })
 }
 
 //

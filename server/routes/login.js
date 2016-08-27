@@ -13,34 +13,37 @@ module.exports = function login (req, res) {
   //
   // For simplicity we don't validate received data here.
   //
-  var user = db.getUser(req.body.username)
+  db.users.getUser(req.body.username, (err, user) => {
+    if (err) return res.status(500).send({ message: err.message })
+    if (!user) return res.status(401).send({ message: 'Bad credentials' })
 
-  if (!user) return res.status(401).send({ message: 'Bad credentials' })
-
-  //
-  // Check user's password and if it is correct return an authorization token.
-  //
-  bcrypt.compare(req.body.password, user.password, (err, ok) => {
-    console.log(user.password, ok)
-
-    if (err) {
-      console.error(err)
-      return res.status(500).send({ message: 'Internal error' })
-    }
-
-    if (!ok) return res.status(401).send({ message: 'Bad credentials' })
-
-    var timestamp = Date.now()
+    console.log(user)
 
     //
-    // Create a JSON Web Token.
+    // Check user's password and if it is correct return an authorization token.
     //
-    var token = jwt.encode({
-      exp: timestamp + 10 * 60 * 1000, // Expiration Time.
-      iat: timestamp, // Issued at.
-      iss: user.username // Issuer.
-    }, authorize.secret)
+    bcrypt.compare(req.body.password, user.password, (err, ok) => {
+      console.log(user.password, ok)
 
-    res.send({ token: token })
+      if (err) {
+        console.error(err)
+        return res.status(500).send({ message: 'Internal error' })
+      }
+
+      if (!ok) return res.status(401).send({ message: 'Bad credentials' })
+
+      var timestamp = Date.now()
+
+      //
+      // Create a JSON Web Token.
+      //
+      var token = jwt.encode({
+        exp: timestamp + 10 * 60 * 1000, // Expiration Time.
+        iat: timestamp, // Issued at.
+        iss: user.username // Issuer.
+      }, authorize.secret)
+
+      res.send({ token: token })
+    })
   })
 }

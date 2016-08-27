@@ -13,6 +13,7 @@ app.use(allowCors)
 app.use(bodyParser.json())
 
 app.post('/login', require('./routes/login'))
+app.use('/users', require('./routes/users'))
 
 //
 // Create an HTTP server and our Primus server.
