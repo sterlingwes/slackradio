@@ -11,7 +11,7 @@ ipcRenderer.on('globalShortcut', function (e, action) {
 
 ipcRenderer.on('slackConnected', function (e, code) {
   console.log('received code', code)
-  SlackRadio.api.slack.create({ code: code })
+  SlackRadio.api.emit('slack.connect', { code: code })
 })
 
 module.exports = ipcRenderer

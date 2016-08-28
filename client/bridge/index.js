@@ -1,7 +1,9 @@
+require('whatwg-fetch')
+
 var electron = require('electron')
 
 var sr = window.SlackRadio = global.SlackRadio = {
-  api: require('../bridge/api')(),
+  api: require('../bridge/api'),
   add: require('../bridge/addSong'),
   ipc: require('../bridge/ipc'),
 

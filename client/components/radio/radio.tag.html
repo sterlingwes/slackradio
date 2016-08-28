@@ -30,7 +30,7 @@
       SlackRadio.ipc.send('connectSlack')
     }
 
-    SlackRadio.api.slack.on('created', (user) => {
+    SlackRadio.api.on('slack.created', (user) => {
       this.connecting = false
       this.store.trigger('slackConnected', user)
     })
