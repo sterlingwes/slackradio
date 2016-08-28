@@ -1,7 +1,10 @@
 const PORT = 8080
 
+require('dotenv').config()
+
 const authorize = require('./middleware/authorize')
 const allowCors = require('./middleware/allowCors')
+const errorHandler = require('./middleware/errors')
 const bodyParser = require('body-parser')
 const express = require('express')
 const http = require('http')
@@ -14,6 +17,9 @@ app.use(bodyParser.json())
 
 app.post('/login', require('./routes/login'))
 app.use('/users', require('./routes/users'))
+
+// must be last
+app.use(errorHandler)
 
 //
 // Create an HTTP server and our Primus server.

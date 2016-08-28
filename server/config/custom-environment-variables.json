@@ -1,0 +1,6 @@
+{
+  "slack": {
+    "id": "SLACK_ID",
+    "secret": "SLACK_SECRET"
+  }
+}
