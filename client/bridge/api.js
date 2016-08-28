@@ -1,10 +1,5 @@
-/* global fetch, Headers, Primus */
+/* global fetch, Headers, Primus, localStorage */
 var HOST = 'http://localhost:8080'
-
-var data = JSON.stringify({
-  username: 'foo',
-  password: 'bar'
-})
 
 var headers = new Headers()
 headers.set('Content-Type', 'application/json')
@@ -15,12 +10,19 @@ api.login = login
 
 module.exports = api
 
-function login (user) {
-  fetch(HOST + '/login', { method: 'POST', body: data, headers: headers })
+api.on('slack.connect', function (data) {
+  console.log('logging in with code', data)
+  login(data.code)
+})
+
+function login (slackCode) {
+  var payload = JSON.stringify({ code: slackCode })
+  fetch(HOST + '/users', { method: 'POST', body: payload, headers: headers })
     .then(function (res) {
-      res.json().then(function (json) {
-        if (!json.token) return console.warn('no token', json)
-        connect(json.token)
+      res.json().then(function (user) {
+        if (!user.token) return console.warn('no token', user)
+        localStorage.setItem('user', JSON.stringify(user))
+        connect(user.token)
       })
     })
 }
@@ -28,7 +30,7 @@ function login (user) {
 function connect (token) {
   var primus = Primus.connect(HOST + '?token=' + token)
 
-  primus.on('open', function open() {
+  primus.on('open', function open () {
     console.log('Connection is alive and kicking');
   })
 
@@ -48,5 +50,5 @@ function connect (token) {
     console.log('Connection closed');
   })
 
-  primus.write('FUCK')
+  primus.write({ event: 'FUCK', message: 'FUCK' })
 }

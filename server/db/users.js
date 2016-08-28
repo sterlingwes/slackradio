@@ -15,7 +15,7 @@ module.exports = _.extend(db, {
 function createUser (profile, cb) {
   const user = {
     userId: profile.user_id,
-    password: profile.access_token,
+    token: profile.access_token,
     accounts: [
       _.pick(profile, slackFields)
     ]

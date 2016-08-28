@@ -11,19 +11,18 @@
     <div class="controls">
       <div class={ control: 1, play: 1, playing: state.isPlaying } onclick={ play }></div>
     </div>
+  </div>
 
-    <div class="options">
-      <div class={icon:1, 'icon-vynil':1, active:state.route === 'radio'} onclick={ showRadio }>
-        <span class="icon-label">Radio</span>
-      </div>
-      <div class={icon:1, 'icon-vallet':1, active:state.route === 'playlist'} onclick={ showLibrary }>
-        <span class="icon-label">Library</span>
-      </div>
-      <div class={icon:1, 'icon-settings':1, active:state.route === 'settings'} onclick={ showSettings }>
-        <span class="icon-label">Settings</span>
-      </div>
+  <div class="options">
+    <div class={icon:1, 'icon-vynil':1, active:state.route === 'radio'} onclick={ showRadio }>
+      <span class="icon-label">Radio</span>
     </div>
-
+    <div class={icon:1, 'icon-vallet':1, active:state.route === 'playlist'} onclick={ showLibrary }>
+      <span class="icon-label">Library</span>
+    </div>
+    <div class={icon:1, 'icon-settings':1, active:state.route === 'settings'} onclick={ showSettings }>
+      <span class="icon-label">Settings</span>
+    </div>
   </div>
   
   <style>
@@ -113,6 +112,7 @@
 
     this.start = function () {
       var firstSong = this.state.songs[0]
+      if (!firstSong) return
       if (!firstSong.exists) {
         firstSong.fetchSong()
         return this.store.trigger('fetchSong', firstSong.id)

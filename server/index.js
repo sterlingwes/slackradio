@@ -15,7 +15,6 @@ const app = express()
 app.use(allowCors)
 app.use(bodyParser.json())
 
-app.post('/login', require('./routes/login'))
 app.use('/users', require('./routes/users'))
 
 // must be last
@@ -39,6 +38,8 @@ primus.authorize(authorize)
 // `connection` is only triggered if the authorization succeeded.
 //
 primus.on('connection', function connection (spark) {
+  console.log('connected!', spark.request.user, spark.id)
+
   spark.on('data', function received (data) {
     console.log(spark.id, 'received message:', data)
 

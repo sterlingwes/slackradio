@@ -3,6 +3,8 @@ const _ = require('lodash')
 const db = require('../db')
 const slack = require('../middleware/slack')
 
+const fields = { userId: 1, accounts: 1 }
+
 router.post('/', slack.authorize, (req, res, next) => {
   db.users.findOrCreate(req.slackUser, (err, user) => {
     if (err) return next(err)
@@ -11,7 +13,7 @@ router.post('/', slack.authorize, (req, res, next) => {
 })
 
 router.get('/', (req, res, next) => {
-  db.users.find({}, { userId: 1, accounts: 1 }, (err, users) => {
+  db.users.find({}, fields, (err, users) => {
     if (err) return next(err)
     res.json(users)
   })
