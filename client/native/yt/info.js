@@ -1,7 +1,7 @@
 var exec = require('child_process').execFile
 
 module.exports = function (url, done) {
-  exec('./bin/youtube-dl', ['--extract-audio', '--dump-json', url], function (err, stdout, stderr) {
+  exec('../bin/youtube-dl', ['--extract-audio', '--dump-json', url], function (err, stdout, stderr) {
     if (err) return done(err)
     var json
     try {

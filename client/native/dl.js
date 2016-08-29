@@ -4,7 +4,7 @@ var fn = require('./utils/filename')
 
 module.exports = function (url, done) {
   yt(url, function (err, stream) {
-    if (err) done(err)
+    if (err) return done(err)
 
     var meta
 

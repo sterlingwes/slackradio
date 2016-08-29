@@ -15,6 +15,23 @@ api.on('slack.connect', function (data) {
   login(data.code)
 })
 
+api.send = function (event, payload) {
+  if (api.socket) {
+    api.socket.write({ event: event, payload: payload })
+  } else {
+    console.warn('should queue event', event, payload)
+  }
+}
+
+var connected = false
+var connecting = false
+var initialUser = localStorage.getItem('user')
+try { initialUser = JSON.parse(initialUser) } catch (e) {}
+
+if (initialUser && initialUser.token) {
+  connect(initialUser.token)
+}
+
 function login (slackCode) {
   var payload = JSON.stringify({ code: slackCode })
   fetch(HOST + '/users', { method: 'POST', body: payload, headers: headers })
@@ -28,27 +45,36 @@ function login (slackCode) {
 }
 
 function connect (token) {
+  if (connecting || connected) return
+  connecting = true
+
   var primus = Primus.connect(HOST + '?token=' + token)
+  api.socket = primus
+  console.log('socket.connecting...')
 
   primus.on('open', function open () {
-    console.log('Connection is alive and kicking');
+    console.log('socket.open')
+    connected = true
+    connecting = false
   })
 
   primus.on('data', function message (data) {
-    console.log('Received a new message from the server', data);
+    console.log('socket.data', data)
   })
 
   primus.on('error', function error (err) {
-    console.error('Something horrible has happened', err.stack);
+    console.error('Something horrible has happened', err.stack)
+    connecting = false
+    connected = false
   })
 
   primus.on('reconnect', function (opts) {
-    console.log('Reconnection attempt started');
+    console.log('socket.reconnect')
+    connected = false
   })
 
   primus.on('end', function () {
-    console.log('Connection closed');
+    console.log('socket.end')
+    connected = false
   })
-
-  primus.write({ event: 'FUCK', message: 'FUCK' })
 }

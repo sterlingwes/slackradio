@@ -41,7 +41,10 @@ function reducerFn (state = initialState, action) {
 
     case 'add song':
       playlist.add(action.song)
-      storage.write(playlistKey, playlist) // probably shouldn't do this here...
+
+      // probably shouldn't do this here...
+      storage.write(playlistKey, playlist)
+      SlackRadio.api.send('users.savePlaylist', playlist.toJSON())
       break
 
     case 'fetch song':

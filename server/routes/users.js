@@ -3,7 +3,7 @@ const _ = require('lodash')
 const db = require('../db')
 const slack = require('../middleware/slack')
 
-const fields = { userId: 1, accounts: 1 }
+const fields = { userId: 1, accounts: 1, playlist: 1 }
 
 router.post('/', slack.authorize, (req, res, next) => {
   db.users.findOrCreate(req.slackUser, (err, user) => {

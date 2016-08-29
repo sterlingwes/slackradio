@@ -9,6 +9,7 @@ const bodyParser = require('body-parser')
 const express = require('express')
 const http = require('http')
 const Primus = require('primus')
+const eventHandlers = require('./events')
 
 const app = express()
 
@@ -34,19 +35,33 @@ const primus = new Primus(server, {
 //
 primus.authorize(authorize)
 
+function getEventHandler (resource, method) {
+  const handlers = eventHandlers[resource]
+  if (handlers && handlers[method]) return handlers[method]
+}
+
 //
 // `connection` is only triggered if the authorization succeeded.
 //
 primus.on('connection', function connection (spark) {
-  console.log('connected!', spark.request.user, spark.id)
+  const { userId } = spark.request.user
+  console.log('connect:', userId, spark.id)
 
   spark.on('data', function received (data) {
-    console.log(spark.id, 'received message:', data)
+    console.log('event:', data.event, userId, spark.id)
+
+    const eventParts = data.event.split('.')
+    const handler = getEventHandler.apply(null, eventParts)
+
+    if (!handler) {
+      console.warn('? No matching event handler:', data.event)
+      return spark.write({ event: 'error', message: `Unknown event type "${data.event}"` })
+    }
 
     //
-    // Echo back to the client any received data.
+    // event handlers are bound to the current spark and passed the event payload
     //
-    spark.write(data)
+    handler.call(spark, data.payload)
   })
 })
 
